@@ -93,7 +93,6 @@ local function pre_process(msg)
 		if msgs >= max_msg then
 			print("Pass2")
 			send_large_msg("user#id"..msg.from.id, "User ["..msg.from.id.."] blocked for spam.")
-			savelog(msg.from.id.." PM", "User ["..msg.from.id.."] blocked for spam.")
 			block_user("user#id"..msg.from.id,ok_cb,false)--Block user if spammed in private
 		end
       end
@@ -107,11 +106,9 @@ local function pre_process(msg)
 	  local name_log = print_name:gsub("_", "")
 	  if msg.to.type == 'chat' or msg.to.type == 'channel' then
 		if username then
-			savelog(msg.to.id, name_log.." @"..username.." ["..msg.from.id.."] kicked for #spam")
-			send_large_msg(receiver , "Flooding is not allowed here\n@"..username.."["..msg.from.id.."]\nStatus: User kicked")
+                        send_large_msg(receiver , "💢 کاربر @"..username.." به دلیل فرستادن پیام های رگباری اخراج شد !")
 		else
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked for #spam")
-			send_large_msg(receiver , "Flooding is not allowed here\nName:"..name_log.."["..msg.from.id.."]\nStatus: User kicked")
+			send_large_msg(receiver , "💢 کاربر <b>"..msg.from.first_name.." </b> <b>["..msg.from.id.."] </b> به دلیل فرستادن پیام های رگباری اخراج شد !")
 		end
 	  end
       -- incr it on redis
