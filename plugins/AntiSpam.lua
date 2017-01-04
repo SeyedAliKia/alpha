@@ -59,7 +59,7 @@ local function pre_process(msg)
     --Check if flood is on or off
     local hash = 'flood:'..msg.to.id						
     --if data[tostring(msg.to.id)]['settings']['flood'] == 'no' then
-    if not redis:get(hash)			
+    if not redis:get(hash) then			
       return msg
     end
   end
