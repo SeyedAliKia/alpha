@@ -195,13 +195,15 @@ local function lock_group_links(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_link_lock = data[tostring(target)]['settings']['lock_link']
-  if group_link_lock == 'yes' then
-    return 'Link posting is already locked'
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'link:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #لینک از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_link'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Link posting has been locked'
+    --data[tostring(target)]['settings']['lock_link'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #لینک فعال شد !", ok_cb, false)
   end
 end
 
@@ -209,13 +211,112 @@ local function unlock_group_links(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_link_lock = data[tostring(target)]['settings']['lock_link']
-  if group_link_lock == 'no' then
-    return 'Link posting is not locked'
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'link:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #لینک فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_link'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Link posting has been unlocked'
+    --data[tostring(target)]['settings']['lock_link'] = 'no'
+    --save_data(_config.moderation.data, data)
+    --local hash = 'link:'..msg.to.id
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #لینک غیرفعال شد !", ok_cb, false)
+  end
+end
+
+local function lock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  local hash = 'fwd:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #فروارد از قبل فعال است !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_fwd'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #فروارد فعال شد !", ok_cb, false)
+  end
+end
+
+local function unlock_group_fwd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_fwd_lock = data[tostring(target)]['settings']['lock_fwd']
+  local hash = 'fwd:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #فروارد فعال نیست !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_fwd'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #فروارد غیرفعال شد !", ok_cb, false)
+  end
+end
+
+local function lock_group_reply(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_reply_lock = data[tostring(target)]['settings']['lock_reply']
+  local hash = 'reply:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #ریپلای از قبل فعال است !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_reply'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #ریپلای فعال شد !", ok_cb, false)
+  end
+end
+
+local function unlock_group_reply(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_reply_lock = data[tostring(target)]['settings']['lock_reply']
+  local hash = 'reply:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #ریپلای فعال نیست !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_reply'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #ریپلای غیرفعال شد !", ok_cb, false)
+  end
+end
+
+local function lock_group_cmd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_cmd_lock = data[tostring(target)]['settings']['lock_cmd']
+  local hash = 'cmd:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #دستورات از قبل فعال است !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_cmd'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #دستورات فعال شد !", ok_cb, false)
+  end
+end
+
+local function unlock_group_cmd(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_cmd_lock = data[tostring(target)]['settings']['lock_cmd']
+  local hash = 'cmd:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #دستورات فعال نیست !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_cmd'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #دستورات غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -223,16 +324,15 @@ local function lock_group_spam(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  if not is_owner(msg) then
-    return "Owners only!"
-  end
-  local group_spam_lock = data[tostring(target)]['settings']['lock_spam']
-  if group_spam_lock == 'yes' then
-    return 'SuperGroup spam is already locked'
+  --local group_spam_lock = data[tostring(target)]['settings']['lock_spam']
+  local hash = 'spam:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #اسپم از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_spam'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'SuperGroup spam has been locked'
+    --data[tostring(target)]['settings']['lock_spam'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #اسپم فعال شد !", ok_cb, false)
   end
 end
 
@@ -240,13 +340,15 @@ local function unlock_group_spam(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_spam_lock = data[tostring(target)]['settings']['lock_spam']
-  if group_spam_lock == 'no' then
-    return 'SuperGroup spam is not locked'
+  --local group_spam_lock = data[tostring(target)]['settings']['lock_spam']
+  local hash = 'spam:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #اسپم فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_spam'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'SuperGroup spam has been unlocked'
+    --data[tostring(target)]['settings']['lock_spam'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #اسپم غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -256,11 +358,11 @@ local function lock_group_flood(msg, data, target)
   end
   local group_flood_lock = data[tostring(target)]['settings']['flood']
   if group_flood_lock == 'yes' then
-    return 'Flood is already locked'
+    return reply_msg(msg.id,"🔐 قفل #فلود از قبل فعال است !", ok_cb, false)
   else
     data[tostring(target)]['settings']['flood'] = 'yes'
     save_data(_config.moderation.data, data)
-    return 'Flood has been locked'
+    return reply_msg(msg.id,"🔒 قفل #فلود فعال شد !", ok_cb, false)
   end
 end
 
@@ -270,11 +372,11 @@ local function unlock_group_flood(msg, data, target)
   end
   local group_flood_lock = data[tostring(target)]['settings']['flood']
   if group_flood_lock == 'no' then
-    return 'Flood is not locked'
+    return reply_msg(msg.id,"🔓 قفل #فلود فعال نیست !", ok_cb, false)
   else
     data[tostring(target)]['settings']['flood'] = 'no'
     save_data(_config.moderation.data, data)
-    return 'Flood has been unlocked'
+    return reply_msg(msg.id,"🔏 قفل #فلود غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -282,13 +384,15 @@ local function lock_group_arabic(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_arabic_lock = data[tostring(target)]['settings']['lock_arabic']
-  if group_arabic_lock == 'yes' then
-    return 'Arabic is already locked'
+  --local group_arabic_lock = data[tostring(target)]['settings']['lock_arabic']
+  local hash = 'persian:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #پارسی از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_arabic'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Arabic has been locked'
+    --data[tostring(target)]['settings']['lock_arabic'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #پارسی فعال شد !", ok_cb, false)
   end
 end
 
@@ -296,83 +400,33 @@ local function unlock_group_arabic(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_arabic_lock = data[tostring(target)]['settings']['lock_arabic']
-  if group_arabic_lock == 'no' then
-    return 'Arabic/Persian is already unlocked'
+  --local group_arabic_lock = data[tostring(target)]['settings']['lock_arabic']
+  local hash = 'persian:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #پارسی فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_arabic'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Arabic/Persian has been unlocked'
+    --data[tostring(target)]['settings']['lock_arabic'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #پارسی غیرفعال شد !", ok_cb, false)
   end
 end
 
-local function lock_group_membermod(msg, data, target)
-  if not is_momod(msg) then
-    return
-  end
-  local group_member_lock = data[tostring(target)]['settings']['lock_member']
-  if group_member_lock == 'yes' then
-    return 'SuperGroup members are already locked'
-  else
-    data[tostring(target)]['settings']['lock_member'] = 'yes'
-    save_data(_config.moderation.data, data)
-  end
-  return 'SuperGroup members has been locked'
-end
 
-local function unlock_group_membermod(msg, data, target)
-  if not is_momod(msg) then
-    return
-  end
-  local group_member_lock = data[tostring(target)]['settings']['lock_member']
-  if group_member_lock == 'no' then
-    return 'SuperGroup members are not locked'
-  else
-    data[tostring(target)]['settings']['lock_member'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'SuperGroup members has been unlocked'
-  end
-end
-
-local function lock_group_rtl(msg, data, target)
-  if not is_momod(msg) then
-    return
-  end
-  local group_rtl_lock = data[tostring(target)]['settings']['lock_rtl']
-  if group_rtl_lock == 'yes' then
-    return 'RTL is already locked'
-  else
-    data[tostring(target)]['settings']['lock_rtl'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'RTL has been locked'
-  end
-end
-
-local function unlock_group_rtl(msg, data, target)
-  if not is_momod(msg) then
-    return
-  end
-  local group_rtl_lock = data[tostring(target)]['settings']['lock_rtl']
-  if group_rtl_lock == 'no' then
-    return 'RTL is already unlocked'
-  else
-    data[tostring(target)]['settings']['lock_rtl'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'RTL has been unlocked'
-  end
-end
 
 local function lock_group_tgservice(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
-  if group_tgservice_lock == 'yes' then
-    return 'Tgservice is already locked'
+  local hash = 'tgservice:'..msg.to.id
+  --local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #سرویس تلگرام از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_tgservice'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Tgservice has been locked'
+    --data[tostring(target)]['settings']['lock_tgservice'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #سرویس تلگرام فعال شد !", ok_cb, false)
   end
 end
 
@@ -380,13 +434,15 @@ local function unlock_group_tgservice(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
-  if group_tgservice_lock == 'no' then
-    return 'TgService Is Not Locked!'
+  --local group_tgservice_lock = data[tostring(target)]['settings']['lock_tgservice']
+  local hash = 'tgservice:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #سرویس تلگرام فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_tgservice'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Tgservice has been unlocked'
+    --data[tostring(target)]['settings']['lock_tgservice'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #سرویس تلگرام غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -394,13 +450,15 @@ local function lock_group_sticker(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_sticker_lock = data[tostring(target)]['settings']['lock_sticker']
-  if group_sticker_lock == 'yes' then
-    return 'Sticker posting is already locked'
+  --local group_sticker_lock = data[tostring(target)]['settings']['lock_sticker']
+  local hash = 'sticker:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #استیکر از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_sticker'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Sticker posting has been locked'
+    --data[tostring(target)]['settings']['lock_sticker'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #استیکر فعال شد !", ok_cb, false)
   end
 end
 
@@ -408,13 +466,15 @@ local function unlock_group_sticker(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_sticker_lock = data[tostring(target)]['settings']['lock_sticker']
-  if group_sticker_lock == 'no' then
-    return 'Sticker posting is already unlocked'
+  --local group_sticker_lock = data[tostring(target)]['settings']['lock_sticker']
+  local hash = 'sticker:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #استیکر فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_sticker'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Sticker posting has been unlocked'
+    --data[tostring(target)]['settings']['lock_sticker'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #استیکر غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -422,13 +482,15 @@ local function lock_group_contacts(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_contacts_lock = data[tostring(target)]['settings']['lock_contacts']
-  if group_contacts_lock == 'yes' then
-    return 'Contact posting is already locked'
+  --local group_contacts_lock = data[tostring(target)]['settings']['lock_contacts']
+  local hash = 'contact:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #مخاطب از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_contacts'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Contact posting has been locked'
+    --data[tostring(target)]['settings']['lock_contacts'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #مخاطب فعال شد !", ok_cb, false)
   end
 end
 
@@ -436,13 +498,15 @@ local function unlock_group_contacts(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_contacts_lock = data[tostring(target)]['settings']['lock_contacts']
-  if group_contacts_lock == 'no' then
-    return 'Contact posting is already unlocked'
+  --local group_contacts_lock = data[tostring(target)]['settings']['lock_contacts']
+  local hash = 'contact:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #مخاطب فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['lock_contacts'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Contact posting has been unlocked'
+    --data[tostring(target)]['settings']['lock_contacts'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #مخاطب غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -450,13 +514,15 @@ local function enable_strict_rules(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_strict_lock = data[tostring(target)]['settings']['strict']
-  if group_strict_lock == 'yes' then
-    return 'Settings are already strictly enforced'
+  --local group_strict_lock = data[tostring(target)]['settings']['strict']
+  local hash = 'strict:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #سختگیرانه از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['strict'] = 'yes'
-    save_data(_config.moderation.data, data)
-    return 'Settings will be strictly enforced'
+    --data[tostring(target)]['settings']['strict'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #سختگیرانه فعال شد !", ok_cb, false)
   end
 end
 
@@ -464,15 +530,298 @@ local function disable_strict_rules(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_strict_lock = data[tostring(target)]['settings']['strict']
-  if group_strict_lock == 'no' then
-    return 'Settings are not strictly enforced'
+  --local group_strict_lock = data[tostring(target)]['settings']['strict']
+  local hash = 'strict:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #سختگیرانه فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['strict'] = 'no'
-    save_data(_config.moderation.data, data)
-    return 'Settings will not be strictly enforced'
+    --data[tostring(target)]['settings']['strict'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #سختگیرانه غیرفعال شد !", ok_cb, false)
   end
 end
+
+-- //Photo Lock\\ --
+local function lock_group_photo(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Photo'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #عکس فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #عکس از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_photo(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Photo'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #عکس غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #عکس فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Photo Lock\\ --
+
+-- //Video Lock\\ --
+local function lock_group_video(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Video'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #فیلم فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #فیلم از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_video(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Video'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #فیلم غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #فیلم فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Video Lock\\ --
+
+-- //Audio Lock\\ --
+local function lock_group_audio(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Audio'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #صدا فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #صدا از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_audio(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Audio'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #صدا غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #صدا فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Audio Lock\\ --
+
+-- //File Lock\\ --
+local function lock_group_documents(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Documents'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #فایل فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #فایل از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_documents(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Documents'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #فایل غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #فایل فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //File Lock\\ --
+
+-- //Gif Lock\\ --
+local function lock_group_gif(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Gifs'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #گیف فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #گیف از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_gif(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Gifs'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #گیف غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #گیف فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Gif Lock\\ --
+
+-- //Gif Lock\\ --
+local function lock_group_gif(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Gifs'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #گیف فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #گیف از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_gif(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Gifs'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #گیف غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #گیف فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Gif Lock\\ --
+
+-- //Text Lock\\ --
+local function lock_group_text(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Text'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #متن فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #متن از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_text(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'Text'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #متن غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #متن فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //Text Lock\\ --
+
+-- //All Lock\\ --
+local function lock_group_all(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'All'
+  if not is_muted(chat_id, msg_type..': yes') then
+    mute(chat_id, msg_type)
+    local text = "🔒 قفل #گروه فعال شد !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  else
+    local text = "🔐 قفل #گروه از قبل فعال است !"
+    return reply_msg(msg.id, text, ok_cb, false)
+  end
+end
+
+local function unlock_group_all(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  local chat_id = msg.to.id
+  local msg_type = 'All'
+  if is_muted(chat_id, msg_type..': yes') then
+    unmute(chat_id, msg_type)
+    return reply_msg(msg.id,"🔓 قفل #گروه غیرفعال شد !", ok_cb, false)
+
+
+  else
+    return reply_msg(msg.id,"🔓 قفل #گروه فعال نیست !", ok_cb, false)
+  end
+
+end
+-- //All Lock\\ --
+
 --End supergroup locks
 
 --'Set supergroup rules' function
