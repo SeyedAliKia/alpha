@@ -57,7 +57,9 @@ local function pre_process(msg)
   local data = load_data(_config.moderation.data)
   if data[tostring(msg.to.id)] then
     --Check if flood is on or off
-    if data[tostring(msg.to.id)]['settings']['flood'] == 'no' then
+    local hash = 'flood:'..msg.to.id						
+    --if data[tostring(msg.to.id)]['settings']['flood'] == 'no' then
+    if not redis:get(hash)			
       return msg
     end
   end
