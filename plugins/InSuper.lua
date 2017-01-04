@@ -1807,14 +1807,14 @@ local function run(msg, matches)
 		if matches[1] == 'setlink' and is_owner(msg) then
 			data[tostring(msg.to.id)]['settings']['set_link'] = 'waiting'
 			save_data(_config.moderation.data, data)
-			return 'Please send the new group link now'
+			return reply_msg(msg.id,'💱 لینک گروه را بفرستید :',ok_cb,false)
 		end
 
 		if msg.text then
 			if msg.text:match("^([https?://w]*.?telegram.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
 				data[tostring(msg.to.id)]['settings']['set_link'] = msg.text
 				save_data(_config.moderation.data, data)
-				return "New link set"
+                                return reply_msg(msg.id, "✅ لینک گروه <b>"..msg.to.title.." </b> تنظیم شد !\n "..msg.text.."", ok_cb, false)
 			end
 		end
 
@@ -1824,10 +1824,9 @@ local function run(msg, matches)
 			end
 			local group_link = data[tostring(msg.to.id)]['settings']['set_link']
 			if not group_link then
-				return "Create a link using /newlink first!\n\nOr if I am not creator use /setlink to set your link"
+				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b> ذخیره کنید !',ok_cb,false)
 			end
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested group link ["..group_link.."]")
-			return "Group link:\n"..group_link
+			return reply_msg(msg.id, '♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link', ok_cb, false)
 		end
 
 		if matches[1] == "invite" and is_sudo(msg) then
@@ -2006,7 +2005,7 @@ local function run(msg, matches)
 				return
 			end
 			if not is_owner(msg) then
-				return "Only owner/support/admin can promote"
+				--return "Only owner/support/admin can promote"
 			end
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
