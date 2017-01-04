@@ -176,6 +176,20 @@ local function promote3(receiver, member_name, user_id)
   save_data(_config.moderation.data, data)
 end
 
+local function promote(receiver, member_username, user_id)
+  local data = load_data(_config.moderation.data)
+  local group = string.gsub(receiver, 'channel#id', '')
+  local member_tag_username = "@"..member_username
+  if not data[group] then
+    return
+  end
+  if data[group]['moderators'][tostring(user_id)] then
+    return
+  end
+  data[group]['moderators'][tostring(user_id)] = member_tag_username
+  save_data(_config.moderation.data, data)
+end
+
 local function promoteadmin(cb_extra, success, result)
   local i = 1
   local chat_name = string.gsub(cb_extra.msg.to.print_name, "_", " ")
