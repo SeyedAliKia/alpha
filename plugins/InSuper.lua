@@ -397,12 +397,12 @@ local function lock_group_flood(msg, data, target)
   --local group_flood_lock = data[tostring(target)]['settings']['flood']
   local hash = 'flood:'..msg.to.id	
   if redis:get(hash) then
-    return reply_msg(msg.id,"🔐 قفل #فلود از قبل فعال است !", ok_cb, false)
+    return reply_msg(msg.id,"🔐 قفل #رگباری از قبل فعال است !", ok_cb, false)
   else
     --data[tostring(target)]['settings']['flood'] = 'yes'
     --save_data(_config.moderation.data, data)
      redis:set(hash, true)	
-    return reply_msg(msg.id,"🔒 قفل #فلود فعال شد !", ok_cb, false)
+    return reply_msg(msg.id,"🔒 قفل #رگباری فعال شد !", ok_cb, false)
   end
 end
 
@@ -413,12 +413,12 @@ local function unlock_group_flood(msg, data, target)
   --local group_flood_lock = data[tostring(target)]['settings']['flood']
   local hash = 'flood:'..msg.to.id		
   if not redis:get(hash) then
-    return reply_msg(msg.id,"🔓 قفل #فلود فعال نیست !", ok_cb, false)
+    return reply_msg(msg.id,"🔓 قفل #رگباری فعال نیست !", ok_cb, false)
   else
     --data[tostring(target)]['settings']['flood'] = 'no'
     --save_data(_config.moderation.data, data)
     redis:del(hash)		
-    return reply_msg(msg.id,"🔏 قفل #فلود غیرفعال شد !", ok_cb, false)
+    return reply_msg(msg.id,"🔏 قفل #رگباری غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -1106,42 +1106,42 @@ local function promote2(receiver, member_username, user_id)
   local group = string.gsub(receiver, 'channel#id', '')
   local member_tag_username = string.gsub(member_username, '@', '(at)')
   if not data[group] then
-    return send_large_msg(receiver, 'SuperGroup is not added.')
+    return send_large_msg(receiver, '')
   end
   if data[group]['moderators'][tostring(user_id)] then
-    return send_large_msg(receiver, member_username..' is already a moderator.')
+    return send_large_msg(receiver, '‼️ کاربر '..member_username..' از قبل مدیر است !')		
   end
   data[group]['moderators'][tostring(user_id)] = member_tag_username
   save_data(_config.moderation.data, data)
-  send_large_msg(receiver, member_username..' has been promoted.')
+  send_large_msg(receiver, '🕵 کاربر '..member_username..' مدیر شد !')
 end
 
 local function demote2(receiver, member_username, user_id)
   local data = load_data(_config.moderation.data)
   local group = string.gsub(receiver, 'channel#id', '')
   if not data[group] then
-    return send_large_msg(receiver, 'Group is not added.')
+    return send_large_msg(receiver, '')
   end
   if not data[group]['moderators'][tostring(user_id)] then
-    return send_large_msg(receiver, member_tag_username..' is not a moderator.')
+    return send_large_msg(receiver, '‼️ کاربر '..member_tag_username..' مدیر نیست !')
   end
   data[group]['moderators'][tostring(user_id)] = nil
   save_data(_config.moderation.data, data)
-  send_large_msg(receiver, member_username..' has been demoted.')
+  send_large_msg(receiver, '❌ کاربر '..member_username..' از مدیریت حذف شد !')
 end
 
 local function modlist(msg)
   local data = load_data(_config.moderation.data)
   local groups = "groups"
   if not data[tostring(groups)][tostring(msg.to.id)] then
-    return 'SuperGroup is not added.'
+    return
   end
   -- determine if table is empty
   if next(data[tostring(msg.to.id)]['moderators']) == nil then
-    return 'No moderator in this group.'
+    return reply_msg(msg.id, '📛 فردی در این گروه مدیر نیست !')
   end
   local i = 1
-  local message = '\nList of moderators for ' .. string.gsub(msg.to.print_name, '_', ' ') .. ':\n'
+local message = '🔰 لیست مدیران گروه <b>'..msg.to.title..' </b>:\n'
   for k,v in pairs(data[tostring(msg.to.id)]['moderators']) do
     message = message ..i..' - '..v..' [' ..k.. '] \n'
     i = i + 1
@@ -1178,7 +1178,6 @@ function get_message_callback(extra, success, result)
 		end
 	elseif get_cmd == "idfrom" then
 		local channel = 'channel#id'..result.to.peer_id
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] obtained id for msg fwd from: ["..result.fwd_from.peer_id.."]")
 		id2 = send_large_msg(channel, result.fwd_from.peer_id)
 	elseif get_cmd == 'channel_block' and not result.action then
 		local member_id = result.from.peer_id
@@ -1303,10 +1302,10 @@ function get_message_callback(extra, success, result)
 		print(chat_id)
 		if is_muted_user(chat_id, user_id) then
 			unmute_user(chat_id, user_id)
-			send_large_msg(receiver, "["..user_id.."] removed from the muted user list")
+			send_large_msg(receiver, "🔊 کاربر <b>["..user_id.."] </b>از لیست افراد بی صدا پاک شد !")
 		elseif is_admin1(msg) then
 			mute_user(chat_id, user_id)
-			send_large_msg(receiver, " ["..user_id.."] added to the muted user list")
+			send_large_msg(receiver, "🔇 کاربر <b>["..user_id.."] </b>به لیست افراد بی صدا افزوده شد !")
 		end
 	end
 end
@@ -1478,9 +1477,9 @@ local function in_channel_cb(cb_extra, success, result)
   local member = cb_extra.username
   local memberid = cb_extra.user_id
   if member then
-    text = 'No user @'..member..' in this SuperGroup.'
+    text = '❌ کاربر @'..member..' در این گروه نیست !'
   else
-    text = 'No user ['..memberid..'] in this SuperGroup.'
+    text = '❌ کاربر <b>['..memberid..'] </b>در این گروه نیست !'
   end
 if get_cmd == "channel_block" then
   for k,v in pairs(result) do
@@ -1501,10 +1500,8 @@ if get_cmd == "channel_block" then
       end
       if v.username then
         text = ""
-        savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked: @"..v.username.." ["..v.peer_id.."]")
       else
         text = ""
-        savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked: ["..v.peer_id.."]")
       end
       kick_user(user_id, channel_id)
       return
@@ -1634,10 +1631,8 @@ local function run(msg, matches)
 				return
 			end
 			if is_super_group(msg) then
-				return reply_msg(msg.id, 'SuperGroup is already added.', ok_cb, false)
+                              return reply_msg(msg.id, '❇️ گروه <b>'..msg.to.title..' </b>از قبل در لیست گروه های تحت مدیریت ربات است !', ok_cb, false)
 			end
-			print("SuperGroup "..msg.to.print_name.."("..msg.to.id..") added")
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] added SuperGroup")
 			superadd(msg)
 			set_mutes(msg.to.id)
 			channel_set_admin(receiver, 'user#id'..msg.from.id, ok_cb, false)
@@ -1645,9 +1640,8 @@ local function run(msg, matches)
 
 		if matches[1] == 'rem' and is_admin1(msg) and not matches[2] then
 			if not is_super_group(msg) then
-				return reply_msg(msg.id, 'SuperGroup is not added.', ok_cb, false)
+                         return reply_msg(msg.id, '❇️ گروه <b>'..msg.to.title..' </b>در لیست گروه های تحت مدیریت ربات نیست !', ok_cb, false)
 			end
-			print("SuperGroup "..msg.to.print_name.."("..msg.to.id..") removed")
 			superrem(msg)
 			rem_mutes(msg.to.id)
 		end
@@ -1655,52 +1649,45 @@ local function run(msg, matches)
 		if not data[tostring(msg.to.id)] then
 			return
 		end
-		if matches[1] == "info" then
-			if not is_owner(msg) then
+		if matches[1] == "gpinfo" then
+			if not is_momod(msg) then
 				return
 			end
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup info")
 			channel_info(receiver, callback_info, {receiver = receiver, msg = msg})
 		end
 
 		if matches[1] == "admins" then
-			if not is_owner(msg) and not is_support(msg.from.id) then
+			if not is_momod(msg) then
 				return
 			end
 			member_type = 'Admins'
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup Admins list")
 			admins = channel_get_admins(receiver,callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
 		if matches[1] == "owner" then
 			local group_owner = data[tostring(msg.to.id)]['set_owner']
 			if not group_owner then
-				return "no owner,ask admins in support groups to set owner for your SuperGroup"
+				return
 			end
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] used /owner")
-			return "SuperGroup owner is ["..group_owner..']'
+			return '🔹 کاربر <b>'..group_owner..' </b> صاحب گروه است !'
 		end
 
 		if matches[1] == "modlist" then
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested group modlist")
 			return modlist(msg)
 			-- channel_get_admins(receiver,callback, {receiver = receiver})
 		end
 
 		if matches[1] == "bots" and is_momod(msg) then
 			member_type = 'Bots'
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup bots list")
 			channel_get_bots(receiver, callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
 		if matches[1] == "who" and not matches[2] and is_momod(msg) then
 			local user_id = msg.from.peer_id
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup users list")
 			channel_get_users(receiver, callback_who, {receiver = receiver})
 		end
 
 		if matches[1] == "kicked" and is_momod(msg) then
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested Kicked users list")
 			channel_get_kicked(receiver, callback_kicked, {receiver = receiver})
 		end
 
@@ -1776,13 +1763,13 @@ local function run(msg, matches)
 				resolve_username(username,  callbackres, cbres_extra)
 			else
 				savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup ID")
-				return "SuperGroup ID for " ..string.gsub(msg.to.print_name, "_", " ").. ":\n\n"..msg.to.id
+                    local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]"
+                    return reply_msg(msg.id,text,ok_cb,false)
 			end
 		end
 
 		if matches[1] == 'kickme' then
 			if msg.to.type == 'channel' then
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] left via kickme")
 				channel_kick("channel#id"..msg.to.id, "user#id"..msg.from.id, ok_cb, false)
 			end
 		end
