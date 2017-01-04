@@ -13,7 +13,6 @@ local function pre_process(msg)
       print('User is banned!')
       local print_name = user_print_name(msg.from):gsub("‮", "")
 	  local name = print_name:gsub("_", "")
-      savelog(msg.to.id, name.." ["..msg.from.id.."] is banned and kicked ! ")-- Save to logs
       kick_user(user_id, msg.to.id)
       end
     end
@@ -23,10 +22,9 @@ local function pre_process(msg)
       print('Checking invited user '..user_id)
       local banned = is_banned(user_id, msg.to.id)
       if banned and not is_momod2(msg.from.id, msg.to.id) or is_gbanned(user_id) and not is_admin2(msg.from.id) then -- Check it with redis
-        print('User is banned!')
+        --print('User is banned!')
       local print_name = user_print_name(msg.from):gsub("‮", "")
 	  local name = print_name:gsub("_", "")
-        savelog(msg.to.id, name.." ["..msg.from.id.."] added a banned user >"..msg.action.user.id)-- Save to logs
         kick_user(user_id, msg.to.id)
         local banhash = 'addedbanuser:'..msg.to.id..':'..msg.from.id
         redis:incr(banhash)
@@ -51,10 +49,7 @@ local function pre_process(msg)
         end
       end
     if msg.action.user.username ~= nil then
-      if string.sub(msg.action.user.username:lower(), -3) == 'bot' and not is_momod(msg) and bots_protection == "yes" then --- Will kick bots added by normal users
-          local print_name = user_print_name(msg.from):gsub("‮", "")
-		  local name = print_name:gsub("_", "")
-          savelog(msg.to.id, name.." ["..msg.from.id.."] added a bot > @".. msg.action.user.username)-- Save to logs
+      if string.sub(msg.action.user.username:lower(), -3) == 'bot' and not is_momod(msg) then --- Will kick bots added by normal users
           kick_user(msg.action.user.id, msg.to.id)
       end
     end
@@ -77,7 +72,6 @@ local function pre_process(msg)
       print('Banned user talking!')
       local print_name = user_print_name(msg.from):gsub("‮", "")
 	  local name = print_name:gsub("_", "")
-      savelog(msg.to.id, name.." ["..msg.from.id.."] banned user is talking !")-- Save to logs
       kick_user(user_id, chat_id)
       msg.text = ''
     end
@@ -94,7 +88,7 @@ local function kick_ban_res(extra, success, result)
 		receiver = 'channel#id'..chat_id
 	  end
 	  if success == 0 then
-		return send_large_msg(receiver, "Cannot find user by that username!")
+		return send_large_msg(receiver, "❌ کاربر مورد نظر پیدا نشد !")
 	  end
       local member_id = result.peer_id
       local user_id = member_id
@@ -134,30 +128,6 @@ end
 
 local function run(msg, matches)
 local support_id = msg.from.id
- if matches[1]:lower() == 'id' and msg.to.type == "chat" or msg.to.type == "user" then
-    if msg.to.type == "user" then
-      return "Bot ID: "..msg.to.id.. "\n\nYour ID: "..msg.from.id
-    end
-    if type(msg.reply_id) ~= "nil" then
-      local print_name = user_print_name(msg.from):gsub("‮", "")
-	  local name = print_name:gsub("_", "")
-        savelog(msg.to.id, name.." ["..msg.from.id.."] used /id ")
-        id = get_message(msg.reply_id,get_message_callback_id, false)
-    elseif matches[1]:lower() == 'id' then
-      local name = user_print_name(msg.from)
-      savelog(msg.to.id, name.." ["..msg.from.id.."] used /id ")
-      return "Group ID for " ..string.gsub(msg.to.print_name, "_", " ").. ":\n\n"..msg.to.id
-    end
-  end
-  if matches[1]:lower() == 'kickme' and msg.to.type == "chat" then-- /kickme
-  local receiver = get_receiver(msg)
-    if msg.to.type == 'chat' then
-      local print_name = user_print_name(msg.from):gsub("‮", "")
-	  local name = print_name:gsub("_", "")
-      savelog(msg.to.id, name.." ["..msg.from.id.."] left using kickme ")-- Save to logs
-      chat_del_user("chat#id"..msg.to.id, "user#id"..msg.from.id, ok_cb, false)
-    end
-  end
 
   if not is_momod(msg) then -- Ignore normal users
     return
@@ -326,22 +296,27 @@ end
 
 return {
   patterns = {
-    "^[#!/]([Bb]anall) (.*)$",
-    "^[#!/]([Bb]anall)$",
-    "^[#!/]([Bb]anlist) (.*)$",
-    "^[#!/]([Bb]anlist)$",
-    "^[#!/]([Gg]banlist)$",
-	"^[#!/]([Kk]ickme)",
-    "^[#!/]([Kk]ick)$",
-	"^[#!/]([Bb]an)$",
-    "^[#!/]([Bb]an) (.*)$",
-    "^[#!/]([Uu]nban) (.*)$",
-    "^[#!/]([Uu]nbanall) (.*)$",
-    "^[#!/]([Uu]nbanall)$",
-    "^[#!/]([Kk]ick) (.*)$",
-    "^[#!/]([Uu]nban)$",
-    "^[#!/]([Ii]d)$",
-    "^!!tgservice (.+)$"
+    "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn]) (.*)$",
+    "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
+    
+    "^([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) (.*)$",
+    "^([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+    "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+    
+    "^([Kk]ick)$",
+    "^([Kk][Ii][Cc][Kk]) (.*)$",
+    
+    "^([Bb][Aa][Nn])$",
+    "^([Bb][Aa][Nn]) (.*)$",
+    
+    "^([Uu][Nn][Bb][Aa][Nn]) (.*)$",
+    "^([Uu][Nn][Bb][Aa][Nn])$",
+    
+    "^([Uu][Nn][Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn]) (.*)$",
+    "^([Uu][Nn][Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
+    
+    "^!!tgservice (chat_add_user)$",
+    "^!!tgservice (chat_add_user_link)$",
   },
   run = run,
   pre_process = pre_process
