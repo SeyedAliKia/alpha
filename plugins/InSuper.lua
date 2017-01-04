@@ -22,9 +22,9 @@ local function check_member_super(cb_extra, success, result)
         set_owner = member_id ,
         settings = {
           set_name = string.gsub(msg.to.title, '_', ' '),
-		  lock_arabic = 'no',
+		  --[[lock_arabic = 'no',
 		  lock_link = "no",
-          flood = 'yes',
+                  flood = 'yes',
 		  lock_spam = 'yes',
 		  lock_sticker = 'no',
 		  member = 'no',
@@ -32,7 +32,7 @@ local function check_member_super(cb_extra, success, result)
 		  lock_rtl = 'no',
 		  lock_tgservice = 'yes',
 		  lock_contacts = 'no',
-		  strict = 'no'
+		  strict = 'no']]
         }
       }
       save_data(_config.moderation.data, data)
@@ -43,7 +43,28 @@ local function check_member_super(cb_extra, success, result)
       end
       data[tostring(groups)][tostring(msg.to.id)] = msg.to.id
       save_data(_config.moderation.data, data)
-	  local text = 'SuperGroup has been added!'
+local hash1 = 'link:'..msg.to.id
+local hash2 = 'fwd:'..msg.to.id
+local hash3 = 'reply:'..msg.to.id
+local hash4 = 'cmd:'..msg.to.id
+local hash5 = 'spam:'..msg.to.id
+local hash6 = 'persian:'..msg.to.id
+local hash7 = 'tgservice:'..msg.to.id
+local hash8 = 'sticker:'..msg.to.id
+local hash9 = 'contact:'..msg.to.id
+local hash10 = 'strict:'..msg.to.id
+redis:set(hash1,true)
+redis:set(hash2,true)
+redis:del(hash3)
+redis:del(hash4)
+redis:set(hash5,true)
+redis:del(hash6)
+redis:set(hash7,true)
+redis:del(hash8)
+redis:del(hash9)
+redis:del(hash10			
+			
+      local text = '✅ گروه <b>'..msg.to.title..' </b>به لیست گروه های تحت مدیریت ربات افزوده شد !'
       return reply_msg(msg.id, text, ok_cb, false)
     end
   end
