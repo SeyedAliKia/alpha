@@ -84,9 +84,8 @@ local hash10 = 'strict:'..msg.to.id
 					kick_user(msg.from.id, msg.to.id)
 				end
 			end
-			local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-			local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-			if is_link_msg and redis:get(hash1) and not is_bot then
+			local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or msg.text:match("[Tt].[Mm][Ee]/") or msg.text:match("[Tt][Ee][Ll][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/")
+			if is_link_msg and redis:get(hash1) then
 				delete_msg(msg.id, ok_cb, false)
 				if strict == "yes" or to_chat then
 					kick_user(msg.from.id, msg.to.id)
@@ -225,6 +224,13 @@ local hash10 = 'strict:'..msg.to.id
 			end
 		end
 		if msg.fwd_from then
+			if redis:get(hash2) then
+                         delete_msg(msg.id, ok_cb, false)	
+			 end
+			if strict == "yes" or to_chat then
+			 delete_msg(msg.id, ok_cb, false)
+			 kick_user(msg.from.id, msg.to.id)
+			end	
 			if msg.fwd_from.title then
 				local is_link_title = msg.fwd_from.title:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.fwd_from.title:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
 				if is_link_title and redis:get(hash1) then
