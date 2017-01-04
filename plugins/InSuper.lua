@@ -62,7 +62,7 @@ redis:del(hash6)
 redis:set(hash7,true)
 redis:del(hash8)
 redis:del(hash9)
-redis:del(hash10			
+redis:del(hash10)			
 			
       local text = '✅ گروه <b>'..msg.to.title..' </b>به لیست گروه های تحت مدیریت ربات افزوده شد !'
       return reply_msg(msg.id, text, ok_cb, false)
