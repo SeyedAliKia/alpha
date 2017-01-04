@@ -92,7 +92,27 @@ local function check_member_superrem(cb_extra, success, result)
       end
       data[tostring(groups)][tostring(msg.to.id)] = nil
       save_data(_config.moderation.data, data)
-	  local text = 'SuperGroup has been removed'
+local hash1 = 'link:'..msg.to.id
+local hash2 = 'fwd:'..msg.to.id
+local hash3 = 'reply:'..msg.to.id
+local hash4 = 'cmd:'..msg.to.id
+local hash5 = 'spam:'..msg.to.id
+local hash6 = 'persian:'..msg.to.id
+local hash7 = 'tgservice:'..msg.to.id
+local hash8 = 'sticker:'..msg.to.id
+local hash9 = 'contact:'..msg.to.id
+local hash10 = 'strict:'..msg.to.id
+redis:del(hash1)
+redis:del(hash2)
+redis:del(hash3)
+redis:del(hash4)
+redis:del(hash5)
+redis:del(hash6)
+redis:del(hash7)
+redis:del(hash8)
+redis:del(hash9)
+redis:del(hash10)			
+      local text = '🚫 گروه <b>'..msg.to.title..' </b>از لیست گروه های تحت مدیریت ربات پاک شد !'
       return reply_msg(msg.id, text, ok_cb, false)
     end
   end
