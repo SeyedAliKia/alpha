@@ -2310,14 +2310,14 @@ local function run(msg, matches)
 			if not is_momod(msg) then
 				return
 			end
-			if tonumber(matches[2]) < 5 or tonumber(matches[2]) > 20 then
-				return "Wrong number,range is [5-20]"
+			if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 30 then
+				return reply_msg(msg.id, '❌ عددی بین <b>3 </b>تا <b>30 </b>وارد کنید !', ok_cb, false)
 			end
 			local flood_max = matches[2]
 			data[tostring(msg.to.id)]['settings']['flood_msg_max'] = flood_max
 			save_data(_config.moderation.data, data)
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] set flood to ["..matches[2].."]")
-			return 'Flood has been set to: '..matches[2]
+			return reply_msg(msg.id, '☢ حساسیت اسپم بر روی <b>'..matches[2]..' </b>تنظیم شد ', ok_cb, false)
 		end
 
 		if matches[1] == "mute" and is_momod(msg) then
@@ -2348,15 +2348,6 @@ local function run(msg, matches)
 			end
 		end
 
-		if matches[1] == "muteslist" and is_momod(msg) then
-			local chat_id = msg.to.id
-			if not has_mutes(chat_id) then
-				set_mutes(chat_id)
-				return mutes_list(chat_id)
-			end
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup muteslist")
-			return mutes_list(chat_id)
-		end
 		if matches[1] == "mutelist" and is_momod(msg) then
 			local chat_id = msg.to.id
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup mutelist")
@@ -2365,25 +2356,14 @@ local function run(msg, matches)
 
 		if matches[1] == 'settings' and is_momod(msg) then
 			local target = msg.to.id
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup settings ")
 			return show_supergroup_settingsmod(msg, target)
 		end
 
-		if matches[1] == 'rules' then
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested group rules")
+		if matches[1] == 'rules' and is_momod(msg) then
 			return get_rules(msg, data)
 		end
 
-		if matches[1] == 'help' and not is_owner(msg) then
-			text = "Message /superhelp to @Teleseed in private for SuperGroup help"
-			reply_msg(msg.id, text, ok_cb, false)
-		elseif matches[1] == 'help' and is_owner(msg) then
-			local name_log = user_print_name(msg.from)
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] Used /superhelp")
-			return super_help()
-		end
-
-		if matches[1] == 'peer_id' and is_admin1(msg)then
+		if matches[1] == 'peer_id' and is_admin1(msg) then
 			text = msg.to.peer_id
 			reply_msg(msg.id, text, ok_cb, false)
 			post_large_msg(receiver, text)
@@ -2402,13 +2382,11 @@ local function run(msg, matches)
 				if is_owner2(msg.from.id) then
 					local receiver = get_receiver(msg)
 					local user = "user#id"..msg.from.id
-					savelog(msg.to.id, name_log.." Admin ["..msg.from.id.."] joined the SuperGroup via link")
 					channel_set_admin(receiver, user, ok_cb, false)
 				end
 				if is_support(msg.from.id) and not is_owner2(msg.from.id) then
 					local receiver = get_receiver(msg)
 					local user = "user#id"..msg.from.id
-					savelog(msg.to.id, name_log.." Support member ["..msg.from.id.."] joined the SuperGroup")
 					channel_set_mod(receiver, user, ok_cb, false)
 				end
 			end
@@ -2416,18 +2394,16 @@ local function run(msg, matches)
 				if is_owner2(msg.action.user.id) then
 					local receiver = get_receiver(msg)
 					local user = "user#id"..msg.action.user.id
-					savelog(msg.to.id, name_log.." Admin ["..msg.action.user.id.."] added to the SuperGroup by [ "..msg.from.id.." ]")
 					channel_set_admin(receiver, user, ok_cb, false)
 				end
 				if is_support(msg.action.user.id) and not is_owner2(msg.action.user.id) then
 					local receiver = get_receiver(msg)
 					local user = "user#id"..msg.action.user.id
-					savelog(msg.to.id, name_log.." Support member ["..msg.action.user.id.."] added to the SuperGroup by [ "..msg.from.id.." ]")
 					channel_set_mod(receiver, user, ok_cb, false)
 				end
 			end
 		end
-		if matches[1] == 'msg.to.peer_id' then
+		if matches[1] == 'msg.to.peer_id' and is_sudo(msg) then
 			post_large_msg(receiver, msg.to.peer_id)
 		end
 	end
