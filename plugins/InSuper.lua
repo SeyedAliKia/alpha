@@ -1,4 +1,4 @@
-﻿--Begin supergrpup.lua
+--Begin supergrpup.lua
 --Check members #Add supergroup
 local function check_member_super(cb_extra, success, result)
   local receiver = cb_extra.receiver
@@ -962,9 +962,119 @@ end
 			data[tostring(target)]['settings']['lock_member'] = 'no'
 		end
 	end
+        local hash1 = 'link:'..msg.to.id
+        local hash2 = 'fwd:'..msg.to.id
+        local hash3 = 'reply:'..msg.to.id
+        local hash4 = 'cmd:'..msg.to.id
+        local hash5 = 'spam:'..msg.to.id
+        local hash6 = 'persian:'..msg.to.id
+        local hash7 = 'tgservice:'..msg.to.id
+        local hash8 = 'sticker:'..msg.to.id
+        local hash9 = 'contact:'..msg.to.id
+        local hash10 = 'strict:'..msg.to.id
+
+        if redis:get(hash1) then
+          link = 'yes'
+        else
+          link = 'no'
+        end
+
+        if redis:get(hash2) then
+          fwd = 'yes'
+        else
+          fwd = 'no'
+        end
+
+        if redis:get(hash3) then
+          reply = 'yes'
+        else
+          reply = 'no'
+        end
+
+        if redis:get(hash4) then
+          cmd = 'yes'
+        else
+          cmd = 'no'
+        end
+
+        if redis:get(hash5) then
+          spam = 'yes'
+        else
+          spam = 'no'
+        end
+
+        if redis:get(hash6) then
+          persian = 'yes'
+        else
+          persian = 'no'
+        end
+
+        if redis:get(hash7) then
+          tgservice = 'yes'
+        else
+          tgservice = 'no'
+        end
+
+        if redis:get(hash8) then
+          sticker = 'yes'
+        else
+          sticker = 'no'
+        end
+
+        if redis:get(hash9) then
+          contact = 'yes'
+        else
+          contact = 'no'
+        end
+
+        if redis:get(hash10) then
+          strict = 'yes'
+        else
+          strict = 'no'
+        end
+
+        if is_muted(tostring(target), 'Audio: yes') then
+          Audio = 'yes'
+        else
+          Audio = 'no'
+        end
+        if is_muted(tostring(target), 'Photo: yes') then
+          Photo = 'yes'
+        else
+          Photo = 'no'
+        end
+        if is_muted(tostring(target), 'Video: yes') then
+          Video = 'yes'
+        else
+          Video = 'no'
+        end
+        if is_muted(tostring(target), 'Gifs: yes') then
+          Gifs = 'yes'
+        else
+          Gifs = 'no'
+        end
+        if is_muted(tostring(target), 'Documents: yes') then
+          Documents = 'yes'
+        else
+          Documents = 'no'
+        end
+        if is_muted(tostring(target), 'Text: yes') then
+          Text = 'yes'
+        else
+          Text = 'no'
+        end
+        if is_muted(tostring(target), 'All: yes') then
+          All = 'yes'
+        else
+          All = 'no'
+        end	
   local settings = data[tostring(target)]['settings']
-  local text = "SuperGroup settings:\nLock links : "..settings.lock_link.."\nLock flood: "..settings.flood.."\nFlood sensitivity : "..NUM_MSG_MAX.."\nLock spam: "..settings.lock_spam.."\nLock Arabic: "..settings.lock_arabic.."\nLock Member: "..settings.lock_member.."\nLock RTL: "..settings.lock_rtl.."\nLock Tgservice : "..settings.lock_tgservice.."\nLock sticker: "..settings.lock_sticker.."\nPublic: "..settings.public.."\nStrict settings: "..settings.strict
-  return text
+  --local text = "SuperGroup settings:\nLock links : "..settings.lock_link.."\nLock flood: "..settings.flood.."\nFlood sensitivity : "..NUM_MSG_MAX.."\nLock spam: "..settings.lock_spam.."\nLock Arabic: "..settings.lock_arabic.."\nLock Member: "..settings.lock_member.."\nLock RTL: "..settings.lock_rtl.."\nLock Tgservice : "..settings.lock_tgservice.."\nLock sticker: "..settings.lock_sticker.."\nPublic: "..settings.public.."\nStrict settings: "..settings.strict
+  --return text
+        local text = "⚙ تنظیمات گروه <b>"..msg.to.print_name.." </b>:\n\n[🔐]  <i>قفل های عادی </i>:\n\n🔷 قفل #فلود : "..settings.flood.."\n🔶 حساسیت فلود : "..NUM_MSG_MAX.."\n🔷 قفل #اسپم : "..spam.."\n\n🔶 قفل #پارسی : "..persian.."\n🔷 قفل #لینک : "..link.."\n🔶 قفل #فروارد : "..fwd.."\n🔷 قفل #سرویس تلگرام : "..tgservice.."\n🔶 قفل #دستورات : "..cmd.."\n🔷 قفل #سختگیرانه : "..strict.."\n♨️ تاریخ انقضا : "..expire.."\n\n[🔏] <i> قفل های رسانه </i>:\n\n🔵 قفل #متن : "..Text.."\n🔴 قفل #عکس : "..Photo.."\n🔵 قفل #فیلم : "..Video.."\n🔴 قفل #صدا : "..Audio.."\n🔵 قفل #گیف : "..Gifs.."\n🔴 قفل #فایل : "..Documents.."\n🔵 قفل #مخاطب : "..contact.."\n🔴 قفل #همه : "..All
+        text = text:gsub("yes","🔒")
+        text = text:gsub("no","🔓")
+        return reply_msg(msg.id, text, ok_cb, false)	
 end
 
 local function promote_admin(receiver, member_username, user_id)
