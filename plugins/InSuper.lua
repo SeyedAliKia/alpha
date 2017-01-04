@@ -1826,7 +1826,8 @@ local function run(msg, matches)
 			if not group_link then
 				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b> ذخیره کنید !',ok_cb,false)
 			end
-			return reply_msg(msg.id, '♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link', ok_cb, false)
+			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link
+                                return reply_msg(msg.id, text, ok_cb, false)
 		end
 
 		if matches[1] == "invite" and is_sudo(msg) then
