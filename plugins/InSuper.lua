@@ -53,6 +53,7 @@ local hash7 = 'tgservice:'..msg.to.id
 local hash8 = 'sticker:'..msg.to.id
 local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
+local hash11 = 'flood:'..msg.to.id			
 redis:set(hash1,true)
 redis:set(hash2,true)
 redis:del(hash3)
@@ -63,7 +64,7 @@ redis:set(hash7,true)
 redis:del(hash8)
 redis:del(hash9)
 redis:del(hash10)			
-			
+redis:set(hash11,true)						
       local text = '✅ گروه <b>'..msg.to.title..' </b>به لیست گروه های تحت مدیریت ربات افزوده شد !'
       return reply_msg(msg.id, text, ok_cb, false)
     end
@@ -397,12 +398,14 @@ local function lock_group_flood(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_flood_lock = data[tostring(target)]['settings']['flood']
-  if group_flood_lock == 'yes' then
+  --local group_flood_lock = data[tostring(target)]['settings']['flood']
+  local hash = 'flood:'..msg.to.id	
+  if redis:get(hash) then
     return reply_msg(msg.id,"🔐 قفل #فلود از قبل فعال است !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['flood'] = 'yes'
-    save_data(_config.moderation.data, data)
+    --data[tostring(target)]['settings']['flood'] = 'yes'
+    --save_data(_config.moderation.data, data)
+     redis:set(hash, true)	
     return reply_msg(msg.id,"🔒 قفل #فلود فعال شد !", ok_cb, false)
   end
 end
@@ -411,12 +414,14 @@ local function unlock_group_flood(msg, data, target)
   if not is_momod(msg) then
     return
   end
-  local group_flood_lock = data[tostring(target)]['settings']['flood']
-  if group_flood_lock == 'no' then
+  --local group_flood_lock = data[tostring(target)]['settings']['flood']
+  local hash = 'flood:'..msg.to.id		
+  if not redis:get(hash) then
     return reply_msg(msg.id,"🔓 قفل #فلود فعال نیست !", ok_cb, false)
   else
-    data[tostring(target)]['settings']['flood'] = 'no'
-    save_data(_config.moderation.data, data)
+    --data[tostring(target)]['settings']['flood'] = 'no'
+    --save_data(_config.moderation.data, data)
+    redis:del(hash)		
     return reply_msg(msg.id,"🔏 قفل #فلود غیرفعال شد !", ok_cb, false)
   end
 end
@@ -972,7 +977,8 @@ end
         local hash8 = 'sticker:'..msg.to.id
         local hash9 = 'contact:'..msg.to.id
         local hash10 = 'strict:'..msg.to.id
-
+        local hash11 = 'flood:'..msg.to.id
+	
         if redis:get(hash1) then
           link = 'yes'
         else
@@ -1032,7 +1038,13 @@ end
         else
           strict = 'no'
         end
-
+	
+        if redis:get(hash11) then
+          flood = 'yes'
+        else
+          flood = 'no'
+        end
+	
         if is_muted(tostring(target), 'Audio: yes') then
           Audio = 'yes'
         else
@@ -1079,7 +1091,7 @@ end
   local settings = data[tostring(target)]['settings']
   --local text = "SuperGroup settings:\nLock links : "..settings.lock_link.."\nLock flood: "..settings.flood.."\nFlood sensitivity : "..NUM_MSG_MAX.."\nLock spam: "..settings.lock_spam.."\nLock Arabic: "..settings.lock_arabic.."\nLock Member: "..settings.lock_member.."\nLock RTL: "..settings.lock_rtl.."\nLock Tgservice : "..settings.lock_tgservice.."\nLock sticker: "..settings.lock_sticker.."\nPublic: "..settings.public.."\nStrict settings: "..settings.strict
   --return text
-        local text = "⚙ تنظیمات گروه <b>"..msg.to.print_name.." </b>:\n\n[🔐]  <i>قفل های عادی </i>:\n\n🔷 قفل #فلود : "..settings.flood.."\n🔶 حساسیت فلود : "..NUM_MSG_MAX.."\n🔷 قفل #اسپم : "..spam.."\n\n🔶 قفل #پارسی : "..persian.."\n🔷 قفل #لینک : "..link.."\n🔶 قفل #فروارد : "..fwd.."\n🔷 قفل #سرویس تلگرام : "..tgservice.."\n🔶 قفل #دستورات : "..cmd.."\n🔷 قفل #سختگیرانه : "..strict.."\n♨️ تاریخ انقضا : "..expire.."\n\n[🔏] <i> قفل های رسانه </i>:\n\n🔵 قفل #متن : "..Text.."\n🔴 قفل #عکس : "..Photo.."\n🔵 قفل #فیلم : "..Video.."\n🔴 قفل #صدا : "..Audio.."\n🔵 قفل #گیف : "..Gifs.."\n🔴 قفل #فایل : "..Documents.."\n🔵 قفل #مخاطب : "..contact.."\n🔴 قفل #همه : "..All
+        local text = "⚙ تنظیمات گروه <b>"..msg.to.print_name.." </b>:\n\n[🔐]  <i>قفل های عادی </i>:\n\n🔷 قفل #فلود : "..flood.."\n🔶 حساسیت فلود : "..NUM_MSG_MAX.."\n🔷 قفل #اسپم : "..spam.."\n\n🔶 قفل #پارسی : "..persian.."\n🔷 قفل #لینک : "..link.."\n🔶 قفل #فروارد : "..fwd.."\n🔷 قفل #سرویس تلگرام : "..tgservice.."\n🔶 قفل #دستورات : "..cmd.."\n🔷 قفل #سختگیرانه : "..strict.."\n♨️ تاریخ انقضا : "..expire.."\n\n[🔏] <i> قفل های رسانه </i>:\n\n🔵 قفل #متن : "..Text.."\n🔴 قفل #عکس : "..Photo.."\n🔵 قفل #فیلم : "..Video.."\n🔴 قفل #صدا : "..Audio.."\n🔵 قفل #گیف : "..Gifs.."\n🔴 قفل #فایل : "..Documents.."\n🔵 قفل #مخاطب : "..contact.."\n🔴 قفل #همه : "..All
         text = text:gsub("yes","🔒")
         text = text:gsub("no","🔓")
         return reply_msg(msg.id, text, ok_cb, false)	
