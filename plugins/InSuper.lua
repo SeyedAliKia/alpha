@@ -2391,7 +2391,6 @@ local function run(msg, matches)
 
 		if matches[1]:lower() == "mutelist" and is_momod(msg) then
 			local chat_id = msg.to.id
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup mutelist")
 			return muted_user_list(chat_id)
 		end
 
