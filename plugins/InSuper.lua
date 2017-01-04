@@ -1210,7 +1210,6 @@ function get_message_callback(extra, success, result)
 	end
 	if get_cmd == "id" and not result.action then
 		local channel = 'channel#id'..result.to.peer_id
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] obtained id for: ["..result.from.peer_id.."]")
 		id1 = send_large_msg(channel, result.from.peer_id)
 	elseif get_cmd == 'id' and result.action then
 		local action = result.action.type
@@ -1280,7 +1279,6 @@ function get_message_callback(extra, success, result)
 		else
 			text = "[ "..user_id.." ] has been demoted from admin"
 		end
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] demoted: ["..user_id.."] from admin by reply")
 		send_large_msg(channel_id, text)
 	elseif get_cmd == "setowner" then
 		local group_owner = data[tostring(result.to.peer_id)]['set_owner']
@@ -1294,11 +1292,10 @@ function get_message_callback(extra, success, result)
 			channel_set_admin(channel_id, user_id, ok_cb, false)
 			data[tostring(result.to.peer_id)]['set_owner'] = tostring(result.from.peer_id)
 			save_data(_config.moderation.data, data)
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] set: ["..result.from.peer_id.."] as owner by reply")
 			if result.from.username then
-				text = "@"..result.from.username.." [ "..result.from.peer_id.." ] added as owner"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>@"..result.from.username.." به عنوان صاحب گروه انتخاب شد !"
 			else
-				text = "[ "..result.from.peer_id.." ] added as owner"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>به عنوان صاحب گروه انتخاب شد !"
 			end
 			send_large_msg(channel_id, text)
 		end
