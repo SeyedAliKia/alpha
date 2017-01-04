@@ -8,6 +8,16 @@ if is_chat_msg(msg) or is_super_group(msg) then
 	local print_name = user_print_name(msg.from):gsub("‮", "") -- get rid of rtl in names
 	local name_log = print_name:gsub("_", " ") -- name for log
 	local to_chat = msg.to.type == 'chat'
+	local hash1 = 'link:'..msg.to.id
+local hash2 = 'fwd:'..msg.to.id
+local hash3 = 'reply:'..msg.to.id
+local hash4 = 'cmd:'..msg.to.id
+local hash5 = 'spam:'..msg.to.id
+local hash6 = 'persian:'..msg.to.id
+local hash7 = 'tgservice:'..msg.to.id
+local hash8 = 'sticker:'..msg.to.id
+local hash9 = 'contact:'..msg.to.id
+local hash10 = 'strict:'..msg.to.id		
 	if data[tostring(msg.to.id)] and data[tostring(msg.to.id)]['settings'] then
 		settings = data[tostring(msg.to.id)]['settings']
 	else
@@ -67,7 +77,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 		if msg.text then -- msg.text checks
 			local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
 			 local _nl, real_digits = string.gsub(msg.text, '%d', '')
-			if lock_spam == "yes" and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+			if redis:get(hash5) and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
 				delete_msg(msg.id, ok_cb, false)
 				if strict == "yes" or to_chat then
 					delete_msg(msg.id, ok_cb, false)
@@ -76,7 +86,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 			end
 			local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
 			local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-			if is_link_msg and lock_link == "yes" and not is_bot then
+			if is_link_msg and redis:get(hash1) and not is_bot then
 				delete_msg(msg.id, ok_cb, false)
 				if strict == "yes" or to_chat then
 					kick_user(msg.from.id, msg.to.id)
@@ -115,7 +125,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 		if msg.media then -- msg.media checks
 			if msg.media.title then
 				local is_link_title = msg.media.title:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.media.title:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-				if is_link_title and lock_link == "yes" then
+				if is_link_title and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -131,7 +141,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 			end
 			if msg.media.description then
 				local is_link_desc = msg.media.description:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.media.description:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-				if is_link_desc and lock_link == "yes" then
+				if is_link_desc and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -147,7 +157,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 			end
 			if msg.media.caption then -- msg.media.caption checks
 				local is_link_caption = msg.media.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.media.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-				if is_link_caption and lock_link == "yes" then
+				if is_link_caption and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -161,7 +171,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 						end
 					end
 				local is_username_caption = msg.media.caption:match("^@[%a%d]")
-				if is_username_caption and lock_link == "yes" then
+				if is_username_caption and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -217,7 +227,7 @@ if is_chat_msg(msg) or is_super_group(msg) then
 		if msg.fwd_from then
 			if msg.fwd_from.title then
 				local is_link_title = msg.fwd_from.title:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.fwd_from.title:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-				if is_link_title and lock_link == "yes" then
+				if is_link_title and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
