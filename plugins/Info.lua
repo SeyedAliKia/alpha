@@ -6,7 +6,6 @@ function run(msg,matches , result)
   local res, code = https.request(db)
   local jdat = json:decode(res)
     return jdat
-    return
   end
 end
 return {
