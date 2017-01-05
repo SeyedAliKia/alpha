@@ -7,13 +7,13 @@ function run(msg,matches , result)
   local img = 'https://api.telegram.org/file/bot'..token..'/'
   local res, code = https.request(db)
   local jdat = json:decode(res)
-  local count = jdat.result.total_count
-  if count then
+  if jdat.result.total_count then
   local fileid = jdat.result.photos[1][3].file_id
   end  
-  if not count then
+  if not jdat.result.total_count then
     send_large_msg(chat_id,"Image Not Found",ok_cb,false)
   else
+    local count = jdat.result.total_count
     local pt, code = https.request(path..fileid)
     local jdat2 = json:decode(pt)
     local path2 = jdat2.result.file_path
