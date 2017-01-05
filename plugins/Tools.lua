@@ -456,7 +456,7 @@ local file = download_to_file(url,'time.jpeg')
 --reply_document(msg.id , file, ok_cb, false)
 local a = '🔹 تاریخ شمسی : '..jdat.FAdate..'\n🔸 تاریخ میلادی : '..jdat.ENdate..'\n'
 --send_photo(get_receiver(msg), file, a, ok_cb, false)
-reply_photo2(msg.id, file, a, ok_cb, false)      
+reply_photo(msg.id, file, ok_cb, false)      
 end
 --------------------
 if matches[1]:lower() == 'voice' then
