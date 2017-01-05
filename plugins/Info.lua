@@ -6,7 +6,6 @@ function run(msg, matches, result)
   local jdat = json:decode(res)
   local count = jdat.result.total_count
   if tonumber(count) == 0 then
-    
     reply_msg(msg.id, "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n", ok_cb, false)
   else
     local fileid = jdat.result.photos[1][3].file_id
