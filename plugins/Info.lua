@@ -13,7 +13,7 @@ function run(msg, matches, result)
     local jdat2 = json:decode(pt)
     local path2 = jdat2.result.file_path
     local link = img..path2
-    local photo = download_to_file(link, "ax"..msg.from.id".jpg")
+    local photo = download_to_file(link, "ax"..msg.from.id..".jpg")
     local textp = "شناسه شما : ["..msg.from.id.."]\nشناسه گروه : ["..msg.to.id.."]\nنام شما : "..msg.from.first_name.."\nتعداد عکس های شما :"..count.."\n"					
     send_photo2(get_receiver(msg), photo, textp,ok_cb, false)	
     return
