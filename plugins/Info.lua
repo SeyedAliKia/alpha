@@ -4,7 +4,7 @@ function run(msg,matches , result)
   local db = 'https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe'
   local res, code = https.request(db)
   local jdat = json:decode(res)
-    send_large_msg(chat_id, jdat)
+    print(jdat)
 end
 return {
   patterns = {
