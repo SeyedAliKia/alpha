@@ -9,7 +9,7 @@ function run(msg,matches , result)
   local jdat = json:decode(res)
   local fileid = jdat.result.photos[1][3].file_id
   local count = jdat.result.total_count
-  if tonumber(count) == 0 then
+  if not count then
     send_large_msg(chat_id,"Image Not Found",ok_cb,false)
   else
     local pt, code = https.request(path..fileid)
