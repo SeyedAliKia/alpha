@@ -10,7 +10,7 @@ function run(msg,matches , result)
   if result and jdat.result.total_count then
   local fileid = jdat.result.photos[1][3].file_id
   end  
-  if not jdat.result.total_count then
+  if not result then
     send_large_msg(chat_id,"Image Not Found",ok_cb,false)
   else
     local count = jdat.result.total_count
