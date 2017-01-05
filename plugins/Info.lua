@@ -7,7 +7,7 @@ function run(msg,matches , result)
   local img = 'https://api.telegram.org/file/bot'..token..'/'
   local res, code = https.request(db)
   local jdat = json:decode(res)
-  if jdat.result.total_count then
+  if result and jdat.result.total_count then
   local fileid = jdat.result.photos[1][3].file_id
   end  
   if not jdat.result.total_count then
