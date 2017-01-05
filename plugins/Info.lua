@@ -191,6 +191,7 @@ do
                 else
                   text = text..'Rank : Member \n\n'
                 end
+                end
             local uhash = 'user:'..msg.from.id
             local user = redis:hgetall(uhash)
             local um_hash = 'msgs:'..msg.from.id..':'..msg.to.id
