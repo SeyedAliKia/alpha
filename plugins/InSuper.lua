@@ -1665,7 +1665,7 @@ local function set_supergroup_photo(msg, success, result)
 end
 
 --Run function
-local function run(msg, matches)
+local function run(msg, matches, result)
 	if msg.to.type == 'chat' then
 		if matches[1]:lower() == 'tosuper' then
 			if not is_admin1(msg) then
