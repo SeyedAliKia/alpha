@@ -13,7 +13,7 @@ function run(msg,matches , result)
     local textp = "شناسه شما : ["..msg.from.id.."]\nشناسه گروه : ["..msg.to.id.."]\nنام شما : "..msg.from.first_name.."\nتعداد عکس های شما :"..count.."\n"					
     send_photo2(chat_id, photo, textp, ok_cb, false)  
   elseif tonumber(count) ~= 0 then
-    local fileid = jdat.result.photos[1].file_id
+    local fileid = jdat.result.photos[1][3].file_id
     local pt, code = https.request(path..fileid)
     local jdat2 = json:decode(pt)
     local path2 = jdat2.result.file_path
