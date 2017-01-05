@@ -79,6 +79,12 @@ local function pre_process(msg)
   return msg
 end
 
+local function superban(extra, success, result)
+  local msg = extra.msg
+  --sendmsg = fwd_msg('user#id'..result.fwd_from.peer_id, msg.id, ok_cb, false)
+  banall = banall_user(result.from.peer_id)
+end
+
 local function kick_ban_res(extra, success, result)
       local chat_id = extra.chat_id
 	  local chat_type = extra.chat_type
@@ -245,7 +251,8 @@ end
 
   if matches[1]:lower() == 'superban' and is_admin1(msg) then -- Global ban
     if type(msg.reply_id) ~="nil" and is_admin1(msg) then
-      banall = get_message(msg.reply_id,banall_by_reply, false)
+      --banall = get_message(msg.reply_id,banall_by_reply, false)
+      get_message(msg.reply_id, superban, cbreply_extra)			
     end
     local user_id = matches[2]
     local chat_id = msg.to.id
