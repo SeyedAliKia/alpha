@@ -7,7 +7,7 @@ function run(msg,matches , result)
   local img = 'https://api.telegram.org/file/bot'..token..'/'
   local res, code = https.request(db)
   local jdat = json:decode(res)
-  if tonumber(jdat.result.total_count) == 0 then
+  if img and tonumber(jdat.result.total_count) == 0 then
     local photo = '/data/photos/ax.jpg'
     local textp = "شناسه شما : ["..msg.from.id.."]\nشناسه گروه : ["..msg.to.id.."]\nنام شما : "..msg.from.first_name.."\nتعداد عکس های شما :"..count.."\n"					
     send_photo2(chat_id, photo, textp, ok_cb, false)  
