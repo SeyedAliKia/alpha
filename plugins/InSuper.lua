@@ -1843,11 +1843,9 @@ local link = img..path2
 local photo = download_to_file(link, "ax"..user_id..".jpg")
 local textp = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\nتعداد عکس های شما : <b>"..count.." </b>\n"					
 send_photo2(chat_id, photo, textp,ok_cb, false)	
-else
 					
-local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
-                    return reply_msg(msg.id,text,ok_cb,false)
-end				
+--local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
+                    --return reply_msg(msg.id,text,ok_cb,false)				
 			end
 		end
 
