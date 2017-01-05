@@ -133,6 +133,23 @@ local function superrem(msg)
     channel_get_users(receiver, check_member_superrem,{receiver = receiver, data = data, msg = msg})
 end
 
+local function check_member_super_deleted(cb_extra, success, result)
+  local receiver = cb_extra.receiver
+  local msg = cb_extra.msg
+  local deleted = 0
+  for k,v in pairs(result) do
+    if not v.first_name and not v.last_name then
+      deleted = deleted + 1
+      kick_user(v.peer_id, msg.to.id)
+    end
+  end
+  if deleted == 0 then
+    reply_msg(msg.id, "‼️ فردی که اکانت کاربریش را حذف کرده باشد در این گروه نیست !", ok_cb, false)
+  else
+    reply_msg(msg.id, "♨️ <b>"..deleted.." </b> فرد که اکانت کاربریشان را حذف کرده بودند اخراج شدند !", ok_cb, false)
+  end
+end
+
 --Get and output admins and bots in supergroup
 local function callback(cb_extra, success, result)
 local i = 1
@@ -2123,13 +2140,28 @@ local function run(msg, matches)
 			return 'Please send the new group photo now'
 		end
 
-		if matches[1]:lower() == 'clean' then
-			if not is_momod(msg) then
-				return
-			end
-			if not is_momod(msg) then
-				return "Only owner can clean"
-			end
+		if matches[1]:lower() == 'clean' and is_momod(msg) then
+	           if matches[2]:lower() == 'banlist' and is_momod(msg) then
+                        local chat_id = msg.to.id
+                        local hash = 'banned:'..chat_id
+                        local data_cat = 'banlist'
+                        data[tostring(msg.to.id)][data_cat] = nil
+                        save_data(_config.moderation.data, data)
+                        redis:del(hash)
+                        return reply_msg(msg.id,"♨️ لیست کاربران بن شده خالی شد !",ok_cb, false)
+                      end
+                      if matches[2]:lower() == 'superbanlist' and is_sudo(msg) then
+                        local hash = 'gbanned'
+                        local data_cat = 'gbanlist'
+                        data[tostring(msg.to.id)][data_cat] = nil
+                        save_data(_config.moderation.data, data)
+                        redis:del(hash)
+                        return reply_msg(msg.id,"♨️ لیست کاربران سوپر بن خالی شد !", ok_cb,false)
+                      end
+                      if matches[2]:lower() == 'deleted' and is_momod(msg) then
+                        local receiver = get_receiver(msg)
+                        channel_get_users(receiver, check_member_super_deleted,{receiver = receiver, msg = msg})
+                      end
 			if matches[2] == 'modlist' then
 				if next(data[tostring(msg.to.id)]['moderators']) == nil then
 					return 'No moderator(s) in this SuperGroup.'
