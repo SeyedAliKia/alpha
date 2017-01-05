@@ -250,7 +250,7 @@ end
     local user_id = matches[2]
     local chat_id = msg.to.id
       local targetuser = matches[2]
-      if string.match(targetuser, '^%d+$') then
+      if string.match(targetuser, '^%d+$') and matches[2] then
         if tonumber(matches[2]) == tonumber(our_id) then
          	return false
         end
