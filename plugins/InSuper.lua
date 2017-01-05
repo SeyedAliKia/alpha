@@ -1847,6 +1847,7 @@ send_photo2(chat_id, photo, textp,ok_cb, false)
 --local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
                     --return reply_msg(msg.id,text,ok_cb,false)				
 			end
+			end	
 		end
 
 		if matches[1]:lower() == 'kickme' then
