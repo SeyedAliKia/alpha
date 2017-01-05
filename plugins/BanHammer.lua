@@ -79,9 +79,7 @@ local function pre_process(msg)
   return msg
 end
 
-local function superban(extra, success, result)
-  local msg = extra.msg
-  --sendmsg = fwd_msg('user#id'..result.fwd_from.peer_id, msg.id, ok_cb, false)
+local function superban(result)
   banall = banall_user(result.from.peer_id)
 end
 
