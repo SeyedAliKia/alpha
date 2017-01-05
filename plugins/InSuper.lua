@@ -1829,7 +1829,6 @@ local function run(msg, matches, result)
 					
 local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
                     return reply_msg(msg.id,text,ok_cb,false)				
-			end
 			end	
 		end
 
