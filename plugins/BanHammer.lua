@@ -1,4 +1,3 @@
-
 local function pre_process(msg)
   local data = load_data(_config.moderation.data)
   -- SERVICE MESSAGE
@@ -77,10 +76,6 @@ local function pre_process(msg)
     end
   end
   return msg
-end
-
-local function superban(result)
-  banall = banall_user(result.from.peer_id)
 end
 
 local function kick_ban_res(extra, success, result)
@@ -249,13 +244,12 @@ end
 
   if matches[1]:lower() == 'superban' and is_admin1(msg) then -- Global ban
     if type(msg.reply_id) ~="nil" and is_admin1(msg) then
-      --banall = get_message(msg.reply_id,banall_by_reply, false)
-      get_message(msg.reply_id, superban, cbreply_extra)			
+      banall = get_message(msg.reply_id,banall_by_reply, false)
     end
     local user_id = matches[2]
     local chat_id = msg.to.id
       local targetuser = matches[2]
-      if string.match(targetuser, '^%d+$') and matches[2] then
+      if string.match(targetuser, '^%d+$') then
         if tonumber(matches[2]) == tonumber(our_id) then
          	return false
         end
