@@ -4,7 +4,6 @@ local function run(msg, matches)
     local token = '236823773:AAHuvA1wudU3hStv2Qq4RjD-MtSZoiTRPf4'
     local user_id = msg.from.id
     local chat_id = get_receiver(msg)
-    local token = "توکن ربات"
     local db = 'https://api.telegram.org/bot'..token..'/getUserProfilePhotos?user_id='..user_id
     local path = 'https://api.telegram.org/bot'..token..'/getFile?file_id='
     local img = 'https://api.telegram.org/file/bot'..token..'/'
