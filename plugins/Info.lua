@@ -7,8 +7,7 @@ function run(msg,matches , result)
   local img = 'https://api.telegram.org/file/bot'..token..'/'
   local res, code = https.request(db)
   local jdat = json:decode(res)
-    local fileid = jdat.result.photos[1][3].file_id
-    local count = jdat.result.total_count
+
     local pt, code = https.request(path..fileid)
     local jdat2 = json:decode(pt)
     local path2 = jdat2.result.file_path
@@ -18,6 +17,8 @@ function run(msg,matches , result)
     local textp = "شناسه شما : ["..msg.from.id.."]\nشناسه گروه : ["..msg.to.id.."]\nنام شما : "..msg.from.first_name.."\nتعداد عکس های شما :"..count.."\n"					
     send_photo2(chat_id, photo, textp, ok_cb, false)  
   elseif tonumber(jdat.result.total_count) ~= 0 then
+        local fileid = jdat.result.photos[1][3].file_id
+    local count = jdat.result.total_count
     local photo = download_to_file(link,"ax"..user_id..".jpg")
     local textp = "شناسه شما : ["..msg.from.id.."]\nشناسه گروه : ["..msg.to.id.."]\nنام شما : "..msg.from.first_name.."\nتعداد عکس های شما :"..count.."\n"					
     send_photo2(chat_id, photo, textp, ok_cb, false)
