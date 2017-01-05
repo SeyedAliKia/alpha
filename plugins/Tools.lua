@@ -452,11 +452,8 @@ local fonts = {'mathbf','mathit','mathfrak','mathrm'}
 local jdat = json:decode(url)
 local url = 'http://latex.codecogs.com/png.download?'..'\\dpi{600}%20\\huge%20\\'..fonts[math.random(#fonts)]..'{{\\color{'..colors[math.random(#colors)]..'}'..jdat.ENtime..'}}'
 local file = download_to_file(url,'time.jpeg')
---send_document(get_receiver(msg) , file, ok_cb, false)
---reply_document(msg.id , file, ok_cb, false)
-local a = '🔹 تاریخ شمسی : '..jdat.FAdate..'\n🔸 تاریخ میلادی : '..jdat.ENdate..'\n'
---send_photo(get_receiver(msg), file, a, ok_cb, false)
-reply_photo(msg.id, file, a, ok_cb, false)      
+local a = '🔹 تاریخ شمسی : '..jdat.FAdate..'\n🔸 تاریخ میلادی : <b>'..jdat.ENdate..' </b>\n'
+send_photo(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
 if matches[1]:lower() == 'voice' then
