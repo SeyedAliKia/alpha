@@ -454,7 +454,7 @@ local url = 'http://latex.codecogs.com/png.download?'..'\\dpi{600}%20\\huge%20\\
 local file = download_to_file(url,'time.jpeg')
 --send_document(get_receiver(msg) , file, ok_cb, false)
 --reply_document(msg.id , file, ok_cb, false)
-local a = '🔹 تاریخ شمسی : '..jdat.FAdate..'\n🔸 تاریخ میلادی : '..jdat.ENdate..'\n'
+local a = '▪️ ساعت : '..jdat.FAtime..'\n🔹 تاریخ شمسی : '..jdat.FAdate..'\n🔸 تاریخ میلادی : '..jdat.ENdate..'\n'
 send_photo2(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
