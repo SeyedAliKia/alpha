@@ -51,8 +51,8 @@ function muteteam(msg, matches)
     r = r:gsub(",","','")
     --local ans = r[math.random(#r)]
     local text = "{'"..r.."'}"
-    --local ran = r[math.random(#r)]
-    return text
+    local ran = text[math.random(#text)]
+    return ran
 end
 end
 return {
