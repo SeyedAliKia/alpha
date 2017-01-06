@@ -43,9 +43,10 @@ function muteteam(msg, matches)
 
        for k,v in pairsByKeys(jdat) do
         i = i + 1
-        jdat = jdat:gsub("https","https"..i.."")
+        --y = jdat.:gsub("https","https"..i.."")
+         y = string.gsub(table.tostring(jdat),"https","https"..i.."") 
         end
-    local r = table.tostring(jdat)
+    local r = table.tostring(y)
     r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub("=","")
