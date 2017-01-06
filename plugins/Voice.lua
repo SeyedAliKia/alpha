@@ -40,15 +40,14 @@ function muteteam(msg, matches)
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
     local r = table.tostring(jdat)
-    r = r:gsub("{{","{")
-    r = r:gsub("}}","}")
-    r = r:gsub("},{",",")
+    r = r:gsub("{{","")
+    r = r:gsub("}}","")
+    r = r:gsub("},{","")
     r = r:gsub('"','')
     r = r:gsub("image=","")
     r = r:gsub("\n","")
     r = r:gsub("{","")
     r = r:gsub("}","")
-    r = r:gsub(",","','")
     return r
 end
 end
