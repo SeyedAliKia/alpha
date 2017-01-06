@@ -7,7 +7,7 @@ function table.val_to_str ( v )
     return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
   else
     return "table" == type( v ) and table.tostring( v ) or
-      tostring( v )
+    tostring( v )
   end
 end
 
@@ -28,7 +28,7 @@ function table.tostring( tbl )
   for k, v in pairs( tbl ) do
     if not done[ k ] then
       table.insert( result,
-        table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
+      table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
     end
   end
   return "{" .. table.concat( result, "," ) .. "}"
@@ -36,25 +36,25 @@ end
 
 function muteteam(msg, matches)
 
-  if matches[1]:lower() == "dl" then
+  if matches[1]:lower() == "getnews" then
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
-    local r = table.tostring(jdat)
-    r = r:gsub("{{","")
-    r = r:gsub("}}","")
-    r = r:gsub("},{","")
-    r = r:gsub('"','')
-    r = r:gsub("image=","")
-    r = r:gsub("https","\nhttps")
-    r = r:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")    
-    r = r:gsub("{","")
-    r = r:gsub("}","")
-    return r
-end
+    local stt = table.tostring(jdat)
+    stt = stt:gsub("{{","")
+    stt = stt:gsub("}}","")
+    stt = stt:gsub("},{","")
+    stt = stt:gsub('"','')
+    stt = stt:gsub("image=","")
+    stt = stt:gsub("https","\nhttps")
+    stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
+    stt = stt:gsub("{","")
+    stt = stt:gsub("}","")
+    return reply_msg(msg.id, stt, ok_cb, false)
+  end
 end
 return {
   patterns = {
-    "^(dl)$",
+    "^([Gg][Ee][Tt][Nn][Ee][Ww][Ss])$",
   },
   run = muteteam,
 }
