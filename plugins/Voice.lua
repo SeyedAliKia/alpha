@@ -52,7 +52,8 @@ function muteteam(msg, matches)
         i = i + 1
         r = r:gsub("https","https"..i.."")
         end
-    return r
+    local t = table.tostring(r)
+    return t
 end
 end
 return {
