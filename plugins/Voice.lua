@@ -14,8 +14,8 @@ function muteteam(msg, matches)
 end
 
 return {
-patterns = {
-  "^([Vv][Oo][Ii][Cc][Ee]) +(.*)$",
-},
-run = muteteam,
+  patterns = {
+    "^([Vv][Oo][Ii][Cc][Ee]) +(.*)$",
+  },
+  run = muteteam,
 }
