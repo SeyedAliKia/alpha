@@ -43,6 +43,7 @@ function muteteam(msg, matches)
     r = r:gsub("{{","{")
     r = r:gsub("}}","}")
     r = r:gsub("},{",",")
+    r = r:gsub('"','')
     --[[r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub("=","")
@@ -50,8 +51,9 @@ function muteteam(msg, matches)
     r = r:gsub("image","")
     r = r:gsub('"','')
     r = r:gsub("https","\nhttps")]]
+    local ans = r[math.random(#r)]
     
-    return r[math.random(#r)]
+    return ans
 end
 end
 return {
