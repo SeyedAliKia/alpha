@@ -46,7 +46,7 @@ function muteteam(msg, matches)
     r = r:gsub(",","")
     r = r:gsub("image","")
     r = r:gsub('"','')
-    r = r:gsub("https","\nhttps"
+    r = r:gsub("https","\nhttps")
      for k,v==v+1 in pairsByKeys(result) do
         r = r:gsub("https",""..v.."")
         end
