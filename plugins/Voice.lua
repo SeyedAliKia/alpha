@@ -34,12 +34,30 @@ function table.tostring( tbl )
   return "{" .. table.concat( result, "," ) .. "}"
 end
 
+function randomlist(l, samp)
+  local newlist
+  newlist = {}
+  if not samp then 
+    samp = 0 
+  else
+    samp = #l - samp
+  end
+  while #l > samp do
+    local idx
+    idx = math.random(1, #l)
+    newlist[#newlist + 1] = l[idx]
+    table.remove(l, idx)
+  end
+  return newlist
+end
+
 function muteteam(msg, matches)
 
   if matches[1]:lower() == "dl" then
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
-    local r = table.tostring(jdat)
+    local ran = randomlist(jdat, 0
+    local r = table.tostring(ran)
     r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub("=","")
