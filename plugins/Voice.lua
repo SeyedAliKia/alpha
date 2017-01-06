@@ -37,9 +37,14 @@ end
 function muteteam(msg, matches)
 
   if matches[1]:lower() == "dl" then
-local url = http.request('https://irapi.ir/sports/newspaper.php')
+    local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
     local r = table.tostring(jdat)
+    r = r:gsub("{","")
+    r = r:gsub("}","")
+    r = r:gsub("=","")
+    r = r:gsub(",","")
+    r = r:gsub("image",")
     return r
 end
 end
