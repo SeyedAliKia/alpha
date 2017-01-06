@@ -46,7 +46,7 @@ function muteteam(msg, matches)
     r = r:gsub('"','')
     r = r:gsub("image=","")
     r = r:gsub("https","\nhttps")
-    r = r:gsub("https","🔷🔷🔷\nhttps")    
+    r = r:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")    
     r = r:gsub("{","")
     r = r:gsub("}","")
     return r
