@@ -10,7 +10,6 @@ function run(msg, matches)
       --reply_file(msg.id, file, ok_cb, false) //Edit lua-tg.c
     end
   end
-end
 
 end
 
