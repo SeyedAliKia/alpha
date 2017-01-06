@@ -52,7 +52,7 @@ function muteteam(msg, matches)
     --local ans = r[math.random(#r)]
     local text = "{'"..r.."'}"
     --local ran = text[math.random(#text)]
-    return string.char(str:byte(math.random(1, #text)))
+    return string.char(math.random(1, #text))
 end
 end
 return {
