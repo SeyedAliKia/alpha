@@ -47,7 +47,8 @@ function muteteam(msg, matches)
     r = r:gsub("image","")
     r = r:gsub('"','')
     r = r:gsub("https","\nhttps")
-    return r
+    local ran = r[math.random(#r)]
+    return ran
 end
 end
 return {
