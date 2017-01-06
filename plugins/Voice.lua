@@ -1,4 +1,4 @@
-function run(msg, matches)
+function muteteam(msg, matches)
 
   if matches[1]:lower() == "voice" then
     if string.len(matches[2]) > 20 then
@@ -17,5 +17,5 @@ return {
 patterns = {
   "^([Vv][Oo][Ii][Cc][Ee]) +(.*)$",
 },
-run = run,
+run = muteteam,
 }
