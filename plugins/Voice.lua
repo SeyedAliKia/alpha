@@ -5,7 +5,7 @@ local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
     return jdat
 end
-
+end
 return {
   patterns = {
     "^(dl)$",
