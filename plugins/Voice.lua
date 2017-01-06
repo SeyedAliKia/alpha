@@ -48,7 +48,7 @@ function muteteam(msg, matches)
     r = r:gsub('"','')
     r = r:gsub("https","\nhttps")
      local i = 1
-     for k,v in pairsByKeys(table.tostring(r)) do
+     for k,v in pairsByKeys(r) do
         i = i + 1
         r = r:gsub("https","https"..i.."")
         end
