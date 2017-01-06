@@ -39,14 +39,7 @@ function muteteam(msg, matches)
   if matches[1]:lower() == "dl" then
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
-         local i = 1
-    local r = table.tostring(y)
-
-       for k,v in pairsByKeys(jdat) do
-        i = i + 1
-        --y = jdat.:gsub("https","https"..i.."")
-         y = string.gsub(r,"https","https"..i.."") 
-        end
+    local r = table.tostring(jdat)
     r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub("=","")
