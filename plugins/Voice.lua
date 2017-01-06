@@ -50,7 +50,7 @@ function muteteam(msg, matches)
     r = r:gsub('"','')
     r = r:gsub("https","\nhttps")]]
     
-    return r[math.random(#r)]
+    return r
 end
 end
 return {
