@@ -40,6 +40,7 @@ function muteteam(msg, matches)
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
     local r = table.tostring(jdat)
+    r = r:gsub("{{","{")
     --[[r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub("=","")
@@ -47,7 +48,8 @@ function muteteam(msg, matches)
     r = r:gsub("image","")
     r = r:gsub('"','')
     r = r:gsub("https","\nhttps")]]
-    return r
+    
+    return r[math.random(#r)]
 end
 end
 return {
