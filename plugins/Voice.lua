@@ -39,8 +39,9 @@ function muteteam(msg, matches)
   if matches[1]:lower() == "dl" then
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
-    local r = table.tostring(jdat)
-    r = r:gsub("{{","{")
+    local tr = table.Random(jdat)
+    local r = table.tostring(tr)
+    --[[r = r:gsub("{{","{")
     r = r:gsub("}}","}")
     r = r:gsub("},{",",")
     r = r:gsub('"','')
@@ -51,8 +52,8 @@ function muteteam(msg, matches)
     r = r:gsub(",","','")
     --local ans = r[math.random(#r)]
     local text = "{'"..r.."'}"
-    --local ran = text[math.random(#text)]
-    return string.char(math.random(1, #text))
+    --local ran = text[math.random(#text)]]]
+    return r
 end
 end
 return {
