@@ -41,7 +41,7 @@ function muteteam(msg, matches)
     local jdat = json:decode(url)
     local tr = table.random(jdat)
     local r = table.tostring(tr)
-    --[[r = r:gsub("{{","{")
+    r = r:gsub("{{","{")
     r = r:gsub("}}","}")
     r = r:gsub("},{",",")
     r = r:gsub('"','')
@@ -50,9 +50,6 @@ function muteteam(msg, matches)
     r = r:gsub("{","")
     r = r:gsub("}","")
     r = r:gsub(",","','")
-    --local ans = r[math.random(#r)]
-    local text = "{'"..r.."'}"
-    --local ran = text[math.random(#text)]]
     return r
 end
 end
