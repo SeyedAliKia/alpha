@@ -1,4 +1,14 @@
 do
+  local function tosticker(msg, success, result)
+  if success and msg.media.type:match("photo") then
+    local file = './data/photos/'..msg.from.id..'.webp'
+    os.rename(result, file)
+    reply_document(msg.id, file, ok_cb, false)
+  else
+    reply_msg(msg.id, '❌ دوباره تلاش کنید !', ok_cb, false)
+  end
+end
+  -------------------------------------
   local function get_variables_hash2(msg)
   if msg.to.type == 'chat' or msg.to.type == 'channel' then
     return 'chat:bot'..msg.to.id..':variables'
@@ -528,6 +538,11 @@ local a = '▪️ ساعت : '..jdat.FAtime..'\n🔹 تاریخ شمسی : '..jd
 send_photo2(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
+if matches[1]:lower() == "sticker" and msg.reply_id then
+    load_photo(msg.reply_id, tosticker, msg)
+end
+---------------------
+    
 if matches[1]:lower() == 'voice' then
 if string.len(matches[2]) > 20 and not is_momod(msg) then
 return reply_msg(msg.id, "داداچ داری اشتباه میزنی", ok_cb, false)
@@ -765,7 +780,9 @@ patterns = {
 "^!!tgservice (chat_add_user)$",
 "^!!tgservice (channel_invite)$",
 "^!!tgservice (chat_add_user_link)$",
-
+    
+"%[(photo)%]",
+    
 "^(.+)$",
 },
 run = run,
