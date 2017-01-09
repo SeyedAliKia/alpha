@@ -1,14 +1,14 @@
 local function run(msg, matches)
   if matches[1]:lower() == "info" then
-    local name = msg.from.first_name
-    if msg.from.last_name then
-      lname = (msg.from.last_name or '---')
-      end
-    if msg.from.username then
-      username = (msg.from.username or "---")  
-     end   
-    local id = msg.from.id
-    local text = name..lname..username
+ if msg.from.username then
+   Username = '@'..msg.from.username
+   else
+   Username = '----'
+   end
+   local text = 'First name : '..(msg.from.first_name or '----')..'\n'
+   local text = text..'Last name : '..(msg.from.last_name or '----')..'\n'	
+   local text = text..'Username : '..Username..'\n'
+   local text = text..'ID : '..msg.from.id..'\n\n'
     reply_msg(msg.id, text, ok_cb, false)
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
