@@ -45,7 +45,6 @@ local function list_chats(msg)
   end
 end
 
-
 local function save_value(msg, name, value)
   if (not name or not value) then
    reply_msg(msg['id'], "", ok_cb, true)
