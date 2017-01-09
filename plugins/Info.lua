@@ -54,13 +54,14 @@ local function rsusername_cb(extra, success, result)
     local hashs = 'msgs:'..result.peer_id..':'..extra.msg.to.id
     local msgss = redis:get(hashs)
     local percent = msgss / r * 100
-    return reply_msg(extra.msg.id, "🔅 نام شما : <b>"..msg.from.first_name.." "..msg.from.last_name.." </b>\n🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
+    return reply_msg(extra.msg.id, "🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
   end
 end
 local function run(msg, matches)
   if matches[1]:lower() == "info" then
     local chat_id = msg.to.id
-    resolve_username(msg.from.username, rsusername_cb, {msg=msg})
+    local msgs = resolve_username(msg.from.username, rsusername_cb, {msg=msg})
+    local text = "🔅 نام شما : <b>"..msg.from.first_name.." "..msg.from.last_name.." </b>\n"..msgs
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
     elseif is_owner(msg) then
