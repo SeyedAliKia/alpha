@@ -3,10 +3,10 @@ local function run(msg, matches)
  if msg.from.username then
    Username = '@'..msg.from.username
    else
-   Username = '<b>--- </b>'
+   Username = '- - -'
    end
-   local text = '🔹 نام : <b>'..(msg.from.first_name or '---')..' </b>\n'
-   local text = text..'🔹 نام خانوادگی : <b>'..(msg.from.last_name or '---')..' </b>\n'	
+   local text = '🔹 نام : <b>'..(msg.from.first_name or '- - -')..' </b>\n'
+   local text = text..'🔹 نام خانوادگی : <b>'..(msg.from.last_name or '- - -')..' </b>\n'	
    local text = text..'🔸 نام کاربری : '..Username..'\n'
    local text = text..'🔸 شناسه : '..msg.from.id..'\n'
     reply_msg(msg.id, text, ok_cb, false)
