@@ -68,11 +68,8 @@ local hash10 = 'strict:'..msg.to.id
 	else
 		strict = 'no'
 	end
-		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) and not msg.service then
+		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) then
 			delete_msg(msg.id, ok_cb, false)
-			if to_chat then
-			--	kick_user(msg.from.id, msg.to.id)
-			end
 		end
 		if msg.text then -- msg.text checks
 			local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
@@ -87,21 +84,17 @@ local hash10 = 'strict:'..msg.to.id
 			local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or msg.text:match("[Tt].[Mm][Ee]/") or msg.text:match("[Tt][Ee][Ll][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/")
 			if is_link_msg and redis:get(hash1) then
 				delete_msg(msg.id, ok_cb, false)
-					
 				if strict == "yes" or to_chat then
 					kick_user(msg.from.id, msg.to.id)
 				end
 		end
 		if msg.service then 
-			if lock_tgservice == "yes" then
+			if redis:get(hash7) and not to_chat then
 				delete_msg(msg.id, ok_cb, false)
-				if to_chat then
-					return
-				end
 			end
 		end
 			local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
-			if is_squig_msg and lock_arabic == "yes" then
+			if is_squig_msg and redis:get(hash6) then
 				delete_msg(msg.id, ok_cb, false)
 				if strict == "yes" or to_chat then
 					kick_user(msg.from.id, msg.to.id)
@@ -132,7 +125,7 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 				local is_squig_title = msg.media.title:match("[\216-\219][\128-\191]")
-				if is_squig_title and lock_arabic == "yes" then
+				if is_squig_title and redis:get(hash6) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -148,7 +141,7 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 				local is_squig_desc = msg.media.description:match("[\216-\219][\128-\191]")
-				if is_squig_desc and lock_arabic == "yes" then
+				if is_squig_desc and redis:get(hash6) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -226,7 +219,8 @@ local hash10 = 'strict:'..msg.to.id
 		end
 		if msg.fwd_from then
 			if redis:get(hash2) then
-                         delete_msg(msg.id, ok_cb, false)	
+                         delete_msg(msg.id, ok_cb, false)
+			 delete_msg(msg.id, ok_cb, false)			
 			 end
 			if strict == "yes" or to_chat then
 			 delete_msg(msg.id, ok_cb, false)
@@ -236,12 +230,13 @@ local hash10 = 'strict:'..msg.to.id
 				local is_link_title = msg.fwd_from.title:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.fwd_from.title:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
 				if is_link_title and redis:get(hash1) then
 					delete_msg(msg.id, ok_cb, false)
+				        delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
 				local is_squig_title = msg.fwd_from.title:match("[\216-\219][\128-\191]")
-				if is_squig_title and lock_arabic == "yes" then
+				if is_squig_title and redis:get(hash6) then
 					delete_msg(msg.id, ok_cb, false)
 					if strict == "yes" or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -252,7 +247,7 @@ local hash10 = 'strict:'..msg.to.id
 				delete_msg(msg.id, ok_cb, false)
 			end
 		end
-		if msg.service then -- msg.service checks
+		--[[if msg.service then -- msg.service checks
 		local action = msg.action.type
 			if action == 'chat_add_user_link' then
 				local user_id = msg.from.id
@@ -300,7 +295,7 @@ local hash10 = 'strict:'..msg.to.id
 					delete_msg(msg.id, ok_cb, false)
 				end
 			end
-		end
+		end]]
 	end
 end
 -- End 'RondoMsgChecks' text checks by @Rondoozle
