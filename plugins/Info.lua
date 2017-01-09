@@ -1,20 +1,3 @@
-local function rsusername_cb(extra, success, result)
-  if success == 1 then
-    local user = result.peer_id
-    local chatid = get_receiver(extra.msg)
-    local username = result.username
-    function round2(num, idp)
-      return tonumber(string.format("%." .. (idp or 0) .. "f", num))
-    end
-
-    local r = tonumber(chat_stat(extra.msg.to.id, extra.msg.to.type) or 0)
-
-    local hashs = 'msgs:'..result.peer_id..':'..extra.msg.to.id
-    local msgss = redis:get(hashs)
-    local percent = msgss / r * 100
-    return reply_msg(extra.msg.id, "🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
-  end
-end
 local function chat_stat(chat_id, typee)
   -- Users on chat
   local hash = ''
@@ -45,6 +28,24 @@ local function chat_stat(chat_id, typee)
     arian = arian + user.msgs
   end
   return arian
+end
+
+local function rsusername_cb(extra, success, result)
+  if success == 1 then
+    local user = result.peer_id
+    local chatid = get_receiver(extra.msg)
+    local username = result.username
+    function round2(num, idp)
+      return tonumber(string.format("%." .. (idp or 0) .. "f", num))
+    end
+
+    local r = tonumber(chat_stat(extra.msg.to.id, extra.msg.to.type) or 0)
+
+    local hashs = 'msgs:'..result.peer_id..':'..extra.msg.to.id
+    local msgss = redis:get(hashs)
+    local percent = msgss / r * 100
+    return reply_msg(extra.msg.id, "🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
+  end
 end
 local function run(msg, matches)
   if matches[1]:lower() == "info" then
