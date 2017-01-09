@@ -61,7 +61,7 @@ local function run(msg, matches)
   if matches[1]:lower() == "info" then
     local chat_id = msg.to.id
     local msgs = resolve_username(msg.from.username, rsusername_cb, {msg=msg})
-    local text = "🔅 نام شما : <b>"..msg.from.first_name.." "..msg.from.last_name.." </b>\n"..tostring(msgs)
+    local text = "🔅 نام شما : <b>"..msg.from.first_name.." </b>\n"..tostring(msgs)
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
     elseif is_owner(msg) then
