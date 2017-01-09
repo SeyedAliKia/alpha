@@ -145,7 +145,6 @@ end
   local function rsusername_cb(extra, success, result)
     if success == 1 then
       local user = result.peer_id
-      local name =  string.gsub(result.print_name, "_", " ")
       local chatid = get_receiver(extra.msg)
       local username = result.username
       function round2(num, idp)
@@ -521,7 +520,9 @@ send_photo2(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
 if matches[1]:lower() == "sticker" and msg.reply_id then
-    load_photo(msg.reply_id, tosticker, msg)
+    if msg.to.type == 'photo' then
+     load_photo(msg.reply_id, tosticker, msg)
+    end    
 end
 ---------------------
     
