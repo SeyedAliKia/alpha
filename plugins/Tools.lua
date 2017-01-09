@@ -1,6 +1,6 @@
 do
   local function tosticker(msg, success, result)
-  if success then
+  if success and and result.media and result.media.type:match("photo") then
     local file = './data/photos/'..msg.from.id..'.webp'
     os.rename(result, file)
     reply_document(msg.id, file, ok_cb, false)
@@ -520,9 +520,7 @@ send_photo2(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
 if matches[1]:lower() == "sticker" and msg.reply_id then
-    if msg.to.type == 'photo' then
-     load_photo(msg.reply_id, tosticker, msg)
-    end    
+     load_photo(msg.reply_id, tosticker, msg)   
 end
 ---------------------
     
