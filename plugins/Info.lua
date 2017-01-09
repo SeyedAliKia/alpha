@@ -54,7 +54,7 @@ local function rsusername_cb(extra, success, result)
     local hashs = 'msgs:'..result.peer_id..':'..extra.msg.to.id
     local msgss = redis:get(hashs)
     local percent = msgss / r * 100
-    return reply_msg(extra.msg.id, "🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
+    return reply_msg(extra.msg.id, "🔅 نام شما : <b>"..msg.from.first_name.." "..msg.from.last_name.." </b>\n🔢 تعداد پیام های شما : <b>"..msgss.." </b>\n💱 تعداد پیام های گروه : <b>"..r.."  </b>",ok_cb,false)
   end
 end
 local function run(msg, matches)
