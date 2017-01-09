@@ -427,16 +427,6 @@ end
 redis:setex("me:"..msg.to.id..":"..msg.from.id, 60, true)
 local chat_id = msg.to.id
 resolve_username(msg.from.username, rsusername_cb, {msg=msg})
-if is_sudo(msg) then
-reply_document(msg.id, "./data/me/sudo.webp", ok_cb, false)
-elseif is_owner(msg) then
-reply_document(msg.id, "./data/me/owner.webp", ok_cb, false)
-elseif is_momod(msg) then
-reply_document(msg.id, "./data/me/momod.webp", ok_cb, false)
-else
-reply_document(msg.id, "./data/me/member.webp", ok_cb, false)
-end
-end
 ---------------------
 if matches[1]:lower() == 'time' then
 if redis:get("time:"..msg.to.id..":"..msg.from.id) and not is_sudo(msg) then
