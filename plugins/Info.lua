@@ -9,6 +9,7 @@ local function run(msg, matches)
      end   
     local id = msg.from.id
     local text = name..lname..username
+    reply_msg(msg.id, text, ok_cb, false)
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
     elseif is_owner(msg) then
@@ -19,7 +20,6 @@ local function run(msg, matches)
       reply_document(msg.id, "./data/photos/member.webp", ok_cb, false)
     end
   end
-      return text
 end
 
 return {
