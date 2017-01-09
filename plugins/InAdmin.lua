@@ -297,37 +297,38 @@ end
     return
 end
 
-local function pre_process(msg)
-  if not msg.text and msg.media then
-    msg.text = '['..msg.media.type..']'
-  end
-  return msg
-end
+--local function pre_process(msg)
+  --if not msg.text and msg.media then
+   -- msg.text = '['..msg.media.type..']'
+  --end
+  --return msg
+--end
 
 return {
   patterns = {
-	"^[#!/](pm) (%d+) (.*)$",
-	"^[#!/](import) (.*)$",
-	"^[#!/](pmunblock) (%d+)$",
-	"^[#!/](pmblock) (%d+)$",
-	"^[#!/](markread) (on)$",
-	"^[#!/](markread) (off)$",
-	"^[#!/](setbotphoto)$",
-	"^[#!/](contactlist)$",
-	"^[#!/](dialoglist)$",
-	"^[#!/](delcontact) (%d+)$",
-	"^[#!/](addcontact) (.*) (.*) (.*)$", 
-	"^[#!/](sendcontact) (.*) (.*) (.*)$",
-	"^[#!/](mycontact)$",
-	"^[#/!](reload)$",
-	"^[#/!](updateid)$",
-	"^[#/!](sync_gbans)$",
-	"^[#/!](addlog)$",
-	"^[#/!](remlog)$",
-	"%[(photo)%]",
+	"^(pm) (%d+) (.*)$",
+	"^(import) (.*)$",
+	"^(pmunblock) (%d+)$",
+	"^(pmblock) (%d+)$",
+	"^(markread) (on)$",
+	"^(markread) (off)$",
+	"^(setbotphoto)$",
+	"^(contactlist)$",
+	"^(dialoglist)$",
+	"^(delcontact) (%d+)$",
+	"^(addcontact) (.*) (.*) (.*)$", 
+	"^(sendcontact) (.*) (.*) (.*)$",
+	"^(mycontact)$",
+	"^(reload)$",
+	"^(updateid)$",
+	"^(sync_gbans)$",
+	"^(addlog)$",
+	"^(remlog)$",
+
+	--"%[(photo)%]",
   },
   run = run,
-  pre_process = pre_process
+  --pre_process = pre_process
 }
 --By @imandaneshi :)
 --https://github.com/SEEDTEAM/TeleSeed/blob/test/plugins/admin.lua
