@@ -8,7 +8,7 @@ local function run(msg, matches)
    local text = '🔹 نام : <b>'..(msg.from.first_name or '---')..' </b>\n'
    local text = text..'🔹 نام خانوادگی : <b>'..(msg.from.last_name or '---')..' </b>\n'	
    local text = text..'🔸 نام کاربری : '..Username..'\n'
-   local text = text..'🔸 شناسه : <b>'..msg.from.id..' </b>\n'
+   local text = text..'🔸 شناسه : '..msg.from.id..'\n'
     reply_msg(msg.id, text, ok_cb, false)
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
