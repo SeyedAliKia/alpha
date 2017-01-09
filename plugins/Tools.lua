@@ -463,25 +463,7 @@ end
 local jdat = json:decode(url)
 local hash = 'group:'..msg.to.id
 local group_welcome = redis:hget(hash,'welcome')
-local data = load_data(_config.moderation.data)
-local rules = data[tostring(msg.to.id)]['rules']
-if msg.to.title then
-group_welcome = string.gsub(group_welcome, 'نام گروه', msg.to.title)
-end
-if msg.from.first_name then
-group_welcome = string.gsub(group_welcome, 'نام اول', ""..(msg.from.first_name or '').."")
-end
-if msg.from.last_name then
-group_welcome = string.gsub(group_welcome, 'نام آخر', ""..(msg.from.last_name or '').."")
-end
-if msg.from.username then
-group_welcome = string.gsub(group_welcome, 'یوزرنیم', "@"..(msg.from.username or '').."")
-end
-group_welcome = string.gsub(group_welcome, 'ساعت', ""..(jdat.FAtime).."")
-group_welcome = string.gsub(group_welcome, 'تاریخ', ""..(jdat.FAdate).."")
-group_welcome = string.gsub(group_welcome, 'قوانین', ""..(rules or '').."")
-
-return reply_msg(msg.id , group_welcome, ok_cb, false)
+return reply_msg(msg.id, group_welcome, ok_cb, false)
 end
 --------------------------
 if matches[1]:lower() == 'setwlc' and matches[2] and is_momod(msg) then
