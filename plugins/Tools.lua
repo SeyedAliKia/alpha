@@ -1,6 +1,6 @@
 do
   local function tosticker(msg, success, result)
-  if success and and msg.text:match("%[(photo)%]") or result.text:match("%[(photo)%]") then
+  if success and msg.text:match("%[(photo)%]") or result.text:match("%[(photo)%]") then
     local file = './data/photos/'..msg.from.id..'.webp'
     os.rename(result, file)
     reply_document(msg.id, file, ok_cb, false)
