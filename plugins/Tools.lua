@@ -1,4 +1,83 @@
 do
+  local function get_variables_hash2(msg)
+  if msg.to.type == 'chat' or msg.to.type == 'channel' then
+    return 'chat:bot'..msg.to.id..':variables'
+  end
+end 
+
+local function get_value(msg, var_name)
+  local hash = get_variables_hash2(msg)
+  if hash then
+    local value = redis:hget(hash, var_name)
+    if not value then
+      return
+    else
+      reply_msg(msg['id'], value, ok_cb, true)
+    end
+  end
+end
+
+
+local function list_chats(msg)
+  local hash = get_variables_hash2(msg)
+
+  if hash then
+    local names = redis:hkeys(hash)
+    local text = '♦️ دستورات تنظیم شده ربات :'
+    m = 1
+    for i=1, #names do
+      text = text..m..' > '..names[i]..'\n'
+      m = m + 1
+    end
+  reply_msg(msg['id'], text, ok_cb, true)
+ else
+ return 
+  end
+end
+
+
+local function save_value(msg, name, value)
+  if (not name or not value) then
+   reply_msg(msg['id'], "", ok_cb, true)
+  end
+  local hash = nil
+  if msg.to.type == 'chat' or msg.to.type == 'channel'  then
+    hash = 'chat:bot'..msg.to.id..':variables'
+
+  end
+  if hash then
+    redis:hset(hash, name, value)
+          reply_msg(msg['id'], "✅ دستور <b>"..name.." </b>ذخیره شد !", ok_cb, true)
+  end
+end
+local function del_value(msg, name)
+  if not name then
+    return
+  end
+  local hash = nil
+  if msg.to.type == 'chat' or msg.to.type == 'channel'  then
+    hash =  'chat:bot'..msg.to.id..':variables'
+  end
+  if hash then
+    redis:hdel(hash, name)
+      reply_msg(msg['id'],  "❌ دستور <b>"..name.." </b>پاک شد !", ok_cb, true)
+  end
+end
+
+local function delallchats(msg)
+  local hash =  'chat:bot'..msg.to.id..':variables'
+
+  if hash then
+    local names = redis:hkeys(hash)
+    for i=1, #names do
+      redis:hdel(hash,names[i])
+    end
+      reply_msg(msg['id'],"❌ همه دستورات پاک شد !", ok_cb, true)
+ else
+ return 
+  end
+end
+
   --------------------------
   local function addword(msg, name)
     local hash = 'chat:'..msg.to.id..':badword'
@@ -581,6 +660,22 @@ local text = reload_plugins(true)
 return reply_msg(msg.id, text, ok_cb, false)
 end
 --------------------------
+if matches[1] == "value" and matches[2] == "+" and is_momod(msg) then
+    return save_value(msg, matches[3], matches[4])  
+end      
+if matches[1] == "value" and matches[2] == "-" and is_momod(msg) then
+    return del_value(msg, matches[3])  
+end      
+  if matches[1] == "value" and matches[2] == 'clean' and is_owner(msg) then
+    return delallchats(msg)
+  end
+  if matches[1] == 'value' and matches[2] == "list" and is_momod(msg) then
+    return list_chats(msg)
+  end
+if msg.text:match("^(.+)$") then
+  return get_value(msg, matches[1]:lower())
+end   
+ --------------------------
 if matches[1]:lower() == "gif" then
 local modes = {'memories-anim-logo','alien-glow-anim-logo','flash-anim-logo','flaming-logo','whirl-anim-logo','highlight-anim-logo','burn-in-anim-logo','shake-anim-logo','inner-fire-anim-logo','jump-anim-logo'}
 local text = URL.escape(matches[2])
@@ -603,7 +698,7 @@ reply_document(msg.id, file, ok_cb, false)
 end
 ---------------------
 if msg.text:match("^(.+)$") then
---return list_variables2(msg, msg.text)
+return list_variables2(msg, msg.text)
 end
 ---------------------
 end
@@ -633,6 +728,11 @@ patterns = {
 "^[Pp]? (-) ([%w_%.%-]+) (chat)",
 "^[Rr]$",
 
+    "^(value) (list)$",
+    "^(value) (clean)$",
+    "^(value) (+) ([^%s]+) (.+)$",
+    "^(value) (-) (.*)$",    
+    
 "^([Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
 "^([Uu][Nn][Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
 "^([Ff][Ii][Ll][Tt][Ee][Rr][Ll][Ii][Ss][Tt])$",
