@@ -13,7 +13,6 @@ do
         reply_document(msg.id, "./data/photos/member.webp", ok_cb, false)
       end
     end
-  end
 end
 
 return {
