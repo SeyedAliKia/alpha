@@ -1,9 +1,14 @@
 local function run(msg, matches)
   if matches[1]:lower() == "info" then
-    local chat_id = msg.to.id
-    local um_hash = 'msgs:'..msg.from.peer_id..':'..msg.to.peer_id
-    local user_info_msgs = tonumber(redis:get(um_hash) or 0)
-    local text = "🔅 نام شما : <b>"..msg.from.first_name.." </b>\n پیام ها : "..user_info_msgs
+    local name = msg.from.first_name
+    if msg.from.last_name then
+      local lname = (msg.from.last_name or "---")
+      end
+    if msg.from.username then
+      local username = (msg.from.username or "---")  
+     end   
+    local id = msg.from.id
+    local text = name..lname..username
     if is_sudo(msg) or is_admin1(msg) then
       reply_document(msg.id, "./data/photos/sudo.webp", ok_cb, false)
     elseif is_owner(msg) then
