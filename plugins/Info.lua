@@ -2,7 +2,7 @@ local function run(msg, matches)
   if matches[1]:lower() == "info" then
     local name = msg.from.first_name
     if msg.from.last_name then
-      local lname = (msg.from.last_name or "---")
+      local lname = (msg.from.last_name or '---')
       end
     if msg.from.username then
       local username = (msg.from.username or "---")  
