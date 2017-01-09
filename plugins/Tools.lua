@@ -1,16 +1,11 @@
 do
-local function tosticker(msg, success, result)
-  local receiver = get_receiver(msg)
+  local function tosticker(msg, success, result)
   if success then
-    local file = './data/tosticker/'..msg.from.id..'.webp'
-    print('File downloaded to:', result)
+    local file = './data/photos/'..msg.from.id..'.webp'
     os.rename(result, file)
-    print('File moved to:', file)
-    send_document(get_receiver(msg), file, ok_cb, false)
-    redis:del("photo:sticker")
+    reply_document(msg.id, file, ok_cb, false)
   else
-    print('Error downloading: '..msg.id)
-    send_large_msg(receiver, 'Failed, please try again!', ok_cb, false)
+    reply_msg(msg.id, '❌ دوباره تلاش کنید !', ok_cb, false)
   end
 end
   -------------------------------------
@@ -523,13 +518,8 @@ local a = '▪️ ساعت : '..jdat.FAtime..'\n🔹 تاریخ شمسی : '..jd
 send_photo2(get_receiver(msg), file, a, ok_cb, false)
 end
 --------------------
-    if msg.reply_id then
-       if msg.to.type == 'photo' and not redis:get("photo:sticker"..msg.from.id) then
-            redis:set("photo:sticker", "waiting"..msg.from.id)
-       end
-      if matches[1]:lower() == "sticker" and redis:get("photo:sticker"..msg.from.id) then
-        load_photo(msg.reply_id, tosticker, msg)
-    end
+if matches[1]:lower() == "sticker" and msg.reply_id then
+     load_photo(msg.reply_id, tosticker, msg)   
 end
 ---------------------
     
