@@ -46,11 +46,16 @@ function muteteam(msg, matches)
     stt = stt:gsub('"','')
     stt = stt:gsub("image=","")
     stt = stt:gsub("https","\nhttps")
-    --stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
+    stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
     stt = stt:gsub("{","")
     stt = stt:gsub("}","")
-    return stt[math.random(#stt)]
-    --return reply_msg(msg.id, stt, ok_cb, false)
+    local url , res = http.request('http://api.gpmod.ir/time/')
+    if res ~= 200 then
+     return reply_msg(msg.id, "❌ دوباره تلاش کنید !", ok_cb, false)
+    end
+    local jdat = json:decode(url)
+    local text = "اخبار ورزشی روز "..jdat.FAdate.." :\n "..stt
+    return reply_msg(msg.id, text, ok_cb, false)
   end
 end
 return {
