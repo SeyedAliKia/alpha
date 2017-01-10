@@ -17,12 +17,4 @@ return {
     "^([Gg][Ee][Tt][Nn][Ee][Ww][Ss])$",
   },
   run = muteteam,
-}    return reply_msg(msg.id, text, ok_cb, false)
-  end
-end
-return {
-  patterns = {
-    "^([Gg][Ee][Tt][Nn][Ee][Ww][Ss])$",
-  },
-  run = muteteam,
 }
