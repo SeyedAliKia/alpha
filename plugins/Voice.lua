@@ -49,8 +49,8 @@ function muteteam(msg, matches)
     --stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
     stt = stt:gsub("{","")
     stt = stt:gsub("}","")
-    
-    return reply_msg(msg.id, stt, ok_cb, false)
+    return stt[math.random(#stt)]
+    --return reply_msg(msg.id, stt, ok_cb, false)
   end
 end
 return {
