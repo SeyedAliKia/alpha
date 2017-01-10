@@ -14,6 +14,7 @@ function muteteam(msg, matches)
     stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
     stt = stt:gsub("{","")
     stt = stt:gsub("}","")
+    local url , res = http.request('http://api.gpmod.ir/time/')
     if res ~= 200 then
      return reply_msg(msg.id, "❌ دوباره تلاش کنید !", ok_cb, false)
     end
