@@ -2,24 +2,7 @@ function table.val_to_str(a)if"string"==type(a)then a=string.gsub(a,"\n","\\n")i
 
 function muteteam(msg, matches)
   if matches[1]:lower() == "getnews" then
-    local url = http.request('https://irapi.ir/sports/newspaper.php')
-    local jdat = json:decode(url)
-    local stt = table.tostring(jdat)
-    stt = stt:gsub("{{","")
-    stt = stt:gsub("}}","")
-    stt = stt:gsub("},{","")
-    stt = stt:gsub('"','')
-    stt = stt:gsub("image=","")
-    stt = stt:gsub("https","\nhttps")
-    stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
-    stt = stt:gsub("{","")
-    stt = stt:gsub("}","")
-    local url , res = http.request('http://api.gpmod.ir/time/')
-    if res ~= 200 then
-     return reply_msg(msg.id, "❌ دوباره تلاش کنید !", ok_cb, false)
-    end
-    local jdat = json:decode(url)
-    local text = "اخبار ورزشی روز <i>"..jdat.FAdate.." </i>:\n "..stt.." \n\n 🌐 @MuteTeam"
+    local a=http.request('https://irapi.ir/sports/newspaper.php')local b=json:decode(a)local c=table.tostring(b)c=c:gsub("{{","")c=c:gsub("}}","")c=c:gsub("},{","")c=c:gsub('"','')c=c:gsub("image=","")c=c:gsub("https","\nhttps")c=c:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")c=c:gsub("{","")c=c:gsub("}","")local a,d=http.request('http://api.gpmod.ir/time/')if d~=200 then return reply_msg(msg.id,"❌ دوباره تلاش کنید !",ok_cb,false)end;local b=json:decode(a)local e="اخبار ورزشی روز <i>"..b.FAdate.." </i>:\n "..c.." \n\n 🌐 @MuteTeam"
     return reply_msg(msg.id, text, ok_cb, false)
   end
 end
