@@ -179,6 +179,19 @@ local function callback_clean_bots (extra, success, result)
 	end
 end
 
+local function callback_kicked2(cb_extra, success, result)
+  --local text = "اعضای اخراج شده "..cb_extra.receiver.."\n\n"
+  local i = 1
+  for k,v in pairsByKeys(result) do
+    if not is_banned(v.peer_id, cb_extra.receiver) and v.first_name then
+      channel_invite(cb_extra.receiver,"user#id"..v.peer_id,ok_cb,false)
+      text = "🔰 "..i.." نفر از لیست مسدود ها به گروه دعوت شدند !"
+      i = i + 1
+    end
+  end
+  send_large_msg(cb_extra.receiver, text)
+end
+
 local function promote3(receiver, member_name, user_id)
   local data = load_data(_config.moderation.data)
   local group = string.gsub(receiver, 'channel#id', '')
@@ -1738,6 +1751,11 @@ local function run(msg, matches, result)
 			return modlist(msg)
 			-- channel_get_admins(receiver,callback, {receiver = receiver})
 		end
+		
+	       if matches[1]:lower() == "invall" and is_momod(msg) then
+                  --savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested Kicked users list")
+                  channel_get_kicked(receiver, callback_kicked2, {receiver = receiver})
+                end
 
 		if matches[1]:lower() == "bots" and is_momod(msg) then
 			member_type = 'Bots'
@@ -2504,6 +2522,7 @@ return {
             "^([Kk][Ii][Cc][Kk])",
 
             "^([Tt][Oo][Ss][Uu][Pp][Ee][Rr])$",
+            "^(invall)$",
 
             "^([Ii][Dd])$",
             "^([Ii][Dd]) (.*)$",
