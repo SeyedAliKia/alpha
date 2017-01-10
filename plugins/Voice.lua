@@ -46,9 +46,10 @@ function muteteam(msg, matches)
     stt = stt:gsub('"','')
     stt = stt:gsub("image=","")
     stt = stt:gsub("https","\nhttps")
-    stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
+    --stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
     stt = stt:gsub("{","")
     stt = stt:gsub("}","")
+    
     return reply_msg(msg.id, stt, ok_cb, false)
   end
 end
