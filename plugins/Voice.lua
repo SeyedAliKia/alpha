@@ -54,7 +54,7 @@ function muteteam(msg, matches)
      return reply_msg(msg.id, "❌ دوباره تلاش کنید !", ok_cb, false)
     end
     local jdat = json:decode(url)
-    local text = "اخبار ورزشی روز "..jdat.FAdate.." :\n "..stt.." \n 🌐 @MuteTeam"
+    local text = "اخبار ورزشی روز <i>"..jdat.FAdate.." </i>:\n "..stt.." \n\n 🌐 @MuteTeam"
     return reply_msg(msg.id, text, ok_cb, false)
   end
 end
