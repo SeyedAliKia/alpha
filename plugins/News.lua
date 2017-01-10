@@ -1,41 +1,6 @@
-function table.val_to_str ( v )
-  if "string" == type( v ) then
-    v = string.gsub( v, "\n", "\\n" )
-    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
-      return "'" .. v .. "'"
-    end
-    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
-  else
-    return "table" == type( v ) and table.tostring( v ) or
-    tostring( v )
-  end
-end
-
-function table.key_to_str ( k )
-  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
-    return k
-  else
-    return "[" .. table.val_to_str( k ) .. "]"
-  end
-end
-
-function table.tostring( tbl )
-  local result, done = {}, {}
-  for k, v in ipairs( tbl ) do
-    table.insert( result, table.val_to_str( v ) )
-    done[ k ] = true
-  end
-  for k, v in pairs( tbl ) do
-    if not done[ k ] then
-      table.insert( result,
-      table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
-    end
-  end
-  return "{" .. table.concat( result, "," ) .. "}"
-end
+function table.val_to_str(a)if"string"==type(a)then a=string.gsub(a,"\n","\\n")if string.match(string.gsub(a,"[^'\"]",""),'^"+$')then return"'"..a.."'"end;return'"'..string.gsub(a,'"','\\"')..'"'else return"table"==type(a)and table.tostring(a)or tostring(a)end end;function table.key_to_str(b)if"string"==type(b)and string.match(b,"^[_%a][_%a%d]*$")then return b else return"["..table.val_to_str(b).."]"end end;function table.tostring(c)local d,e={},{}for b,a in ipairs(c)do table.insert(d,table.val_to_str(a))e[b]=true end;for b,a in pairs(c)do if not e[b]then table.insert(d,table.key_to_str(b).."="..table.val_to_str(a))end end;return"{"..table.concat(d,",").."}"end
 
 function muteteam(msg, matches)
-
   if matches[1]:lower() == "getnews" then
     local url = http.request('https://irapi.ir/sports/newspaper.php')
     local jdat = json:decode(url)
