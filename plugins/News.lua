@@ -2,8 +2,18 @@ function table.val_to_str(a)if"string"==type(a)then a=string.gsub(a,"\n","\\n")i
 
 function muteteam(msg, matches)
   if matches[1]:lower() == "getnews" then
-    local a=http.request('https://irapi.ir/sports/newspaper.php')local b=json:decode(a)local c=table.tostring(b)c=c:gsub("{{","")c=c:gsub("}}","")c=c:gsub("},{","")c=c:gsub('"','')c=c:gsub("image=","")c=c:gsub("https","\nhttps")c=c:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")c=c:gsub("{","")c=c:gsub("}","")
-    local url , res = http.request('http://api.gpmod.ir/time/')
+    local url = http.request('https://irapi.ir/sports/newspaper.php')
+    local jdat = json:decode(url)
+    local stt = table.tostring(jdat)
+    stt = stt:gsub("{{","")
+    stt = stt:gsub("}}","")
+    stt = stt:gsub("},{","")
+    stt = stt:gsub('"','')
+    stt = stt:gsub("image=","")
+    stt = stt:gsub("https","\nhttps")
+    stt = stt:gsub("https","🔷🔶🔷🔶🔷🔶🔷🔶🔷\nhttps")
+    stt = stt:gsub("{","")
+    stt = stt:gsub("}","")
     if res ~= 200 then
      return reply_msg(msg.id, "❌ دوباره تلاش کنید !", ok_cb, false)
     end
