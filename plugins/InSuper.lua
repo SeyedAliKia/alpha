@@ -1626,11 +1626,10 @@ elseif get_cmd == "setadmin" then
 					channel_set_admin(receiver, user_id, ok_cb, false)
 					data[tostring(channel)]['set_owner'] = tostring(v.peer_id)
 					save_data(_config.moderation.data, data)
-					savelog(channel, name_log.."["..from_id.."] set ["..v.peer_id.."] as owner by username")
 				if result.username then
-					text = member_username.." ["..v.peer_id.."] added as owner"
+					text = "👮🏼 کاربر [<b>"..v.peer_id.."] </b>@"..member_username.." به عنوان صاحب گروه ذخیره شد !"
 				else
-					text = "["..v.peer_id.."] added as owner"
+					text = "👮🏼 کاربر [<b>"..v.peer_id.."] </b>به عنوان صاحب گروه ذخیره شد !"
 				end
 			end
 		elseif memberid and vusername ~= member and vpeer_id ~= memberid then
@@ -1644,8 +1643,7 @@ elseif get_cmd == "setadmin" then
 				end
 				data[tostring(channel)]['set_owner'] = tostring(memberid)
 				save_data(_config.moderation.data, data)
-				savelog(channel, name_log.."["..from_id.."] set ["..memberid.."] as owner by username")
-				text = "["..memberid.."] added as owner"
+				text = "👮🏼 کاربر <b>["..memberid.."] </b>به عنوان صاحب گروه ذخیره شد !"
 			end
 		end
 	end
