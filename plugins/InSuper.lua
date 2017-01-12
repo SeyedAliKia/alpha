@@ -986,7 +986,6 @@ local function set_public_membermod(msg, data, target)
   end
   return 'SuperGroup is now: public'
 end
-
 local function unset_public_membermod(msg, data, target)
   if not is_momod(msg) then
     return
@@ -1627,10 +1626,11 @@ elseif get_cmd == "setadmin" then
 					channel_set_admin(receiver, user_id, ok_cb, false)
 					data[tostring(channel)]['set_owner'] = tostring(v.peer_id)
 					save_data(_config.moderation.data, data)
+					savelog(channel, name_log.."["..from_id.."] set ["..v.peer_id.."] as owner by username")
 				if result.username then
-					text = "👮🏼 کاربر [<b>"..v.peer_id.."] </b>@"..member_username.." به عنوان صاحب گروه ذخیره شد !"
+					text = member_username.." ["..v.peer_id.."] added as owner"
 				else
-					text = "👮🏼 کاربر [<b>"..v.peer_id.."] </b>به عنوان صاحب گروه ذخیره شد !"
+					text = "["..v.peer_id.."] added as owner"
 				end
 			end
 		elseif memberid and vusername ~= member and vpeer_id ~= memberid then
@@ -1644,13 +1644,13 @@ elseif get_cmd == "setadmin" then
 				end
 				data[tostring(channel)]['set_owner'] = tostring(memberid)
 				save_data(_config.moderation.data, data)
-				text = "✅ کاربر [<b>"..memberid.." </b> به عنوان صاحب گروه ذخیره شد !"
+				savelog(channel, name_log.."["..from_id.."] set ["..memberid.."] as owner by username")
+				text = "["..memberid.."] added as owner"
 			end
 		end
 	end
  end
---send_large_msg(receiver, text)
-reply_msg(result.id, text, ok_cb,false)	
+send_large_msg(receiver, text)
 end
 --End non-channel_invite username actions
 
