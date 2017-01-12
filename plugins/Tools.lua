@@ -27,7 +27,30 @@ local function get_value(msg, var_name)
   end
 end
 
+local function chat_list(msg)
+    local data = load_data(_config.moderation.data)
+        local groups = 'groups'
+        if not data[tostring(groups)] then
+                return 'No groups at the moment'
+        end
+        local message = '🔹 لیست گروه های ربات :\n\n '
+        for k,v in pairs(data[tostring(groups)]) do
+                local settings = data[tostring(v)]['settings']
+                for m,n in pairsByKeys(settings) do
+                        if m == 'set_name' then
+                                name = n
+                        end
+                end
 
+                message = message .. '️ '.. name .. ' [' .. v .. ']\n\n '
+        end
+        local file = io.open("./groups/lists/listed_groups.txt", "w")
+        file:write(message)
+        file:flush()
+        file:close()
+        return message
+end
+  
 local function list_chats(msg)
   local hash = get_variables_hash2(msg)
 
@@ -522,7 +545,11 @@ if matches[1]:lower() == "sticker" and msg.reply_id then
      load_photo(msg.reply_id, tosticker, msg)   
 end
 ---------------------
+if matches[1]:lower() == "chats" and is_sudo(msg) then
+      return chat_list(msg)
+end      
     
+ --------------------   
 if matches[1]:lower() == 'voice' then
 if string.len(matches[2]) > 20 and not is_momod(msg) then
 return reply_msg(msg.id, "داداچ داری اشتباه میزنی", ok_cb, false)
@@ -735,26 +762,8 @@ patterns = {
 
 "^([Ss][Ee][Tt][Ww][Ll][Cc]) +(.*)$",
 "^([Cc][Ll][Ee][Aa][Nn]) (welcome)$",
-
-
-"^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn]) (.*)$",
-"^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
-
-"^([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) (.*)$",
-"^([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
-"^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
-
-"^([Kk]ick)$",
-"^([Kk][Ii][Cc][Kk]) (.*)$",
-
-"^([Bb][Aa][Nn])$",
-"^([Bb][Aa][Nn]) (.*)$",
-
-"^([Uu][Nn][Bb][Aa][Nn]) (.*)$",
-"^([Uu][Nn][Bb][Aa][Nn])$",
-
-"^([Uu][Nn][Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn]) (.*)$",
-"^([Uu][Nn][Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
+    
+	"^([Cc]hats)$",
 
 
 "^!!tgservice (chat_add_user)$",
