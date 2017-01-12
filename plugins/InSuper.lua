@@ -155,7 +155,9 @@ local function callback(cb_extra, success, result)
 local i = 1
 local chat_name = string.gsub(cb_extra.msg.to.print_name, "_", " ")
 local member_type = cb_extra.member_type
-local text = member_type.." for "..chat_name..":\n"
+member_type = member_type:gsub("Admins","ادمین")
+member_type = member_type:gsub("Bots","ربات")	
+local text = member_type.." های گروه <b>"..chat_name.." </b>:\n"
 for k,v in pairsByKeys(result) do
 if not v.first_name then
 	name = " "
@@ -166,7 +168,8 @@ else
 		text = text.."\n"..i.." - "..name.."["..v.peer_id.."]"
 		i = i + 1
 	end
-    send_large_msg(cb_extra.receiver, text)
+    --send_large_msg(cb_extra.receiver, text)
+   reply_msg(cb_extra.msg.id, text, ok_cb,false)	
 end
 
 local function callback_clean_bots (extra, success, result)
