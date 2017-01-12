@@ -2021,13 +2021,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'promote' then
-		  if not is_momod(msg) then
-				return
-			end
-			if not is_owner(msg) then
-				return "Only owner/admin can promote"
-			end
+		if matches[1]:lower() == 'promote' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'promote',
@@ -2038,7 +2032,6 @@ local function run(msg, matches, result)
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'promote'
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] promoted user#id"..matches[2])
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
 			elseif matches[1]:lower() == 'promote' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
@@ -2047,7 +2040,6 @@ local function run(msg, matches, result)
 				}
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] promoted @"..username)
 				return resolve_username(username, callbackres, cbres_extra)
 			end
 		end
@@ -2082,7 +2074,6 @@ local function run(msg, matches, result)
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'demote'
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] demoted user#id"..matches[2])
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
 			elseif matches[1]:lower() == 'demote' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
@@ -2091,7 +2082,6 @@ local function run(msg, matches, result)
 				}
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] demoted @"..username)
 				return resolve_username(username, callbackres, cbres_extra)
 			end
 		end
@@ -2099,12 +2089,10 @@ local function run(msg, matches, result)
 		if matches[1]:lower() == "setname" and is_momod(msg) then
 			local receiver = get_receiver(msg)
 			local set_name = string.gsub(matches[2], '_', '')
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] renamed SuperGroup to: "..matches[2])
 			rename_channel(receiver, set_name, ok_cb, false)
 		end
 
 		if msg.service and msg.action.type == 'chat_rename' then
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] renamed SuperGroup to: "..msg.to.title)
 			data[tostring(msg.to.id)]['settings']['set_name'] = msg.to.title
 			save_data(_config.moderation.data, data)
 		end
@@ -2116,12 +2104,11 @@ local function run(msg, matches, result)
 			local target = msg.to.id
 			data[tostring(target)][data_cat] = about_text
 			save_data(_config.moderation.data, data)
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] set SuperGroup description to: "..about_text)
 			channel_set_about(receiver, about_text, ok_cb, false)
-			return "Description has been set.\n\nSelect the chat again to see the changes."
+			reply_msg(msg.id, "✅ توضیحات گروه با موفقیت تغییر کرد ! توضیحات جدید :\n "..matches[2], ok_cb, false)
 		end
 
-		if matches[1]:lower() == "setusername" and is_admin1(msg) then
+		--[[if matches[1]:lower() == "setusername" and is_admin1(msg) then
 			local function ok_username_cb (extra, success, result)
 				local receiver = extra.receiver
 				if success == 1 then
@@ -2132,18 +2119,16 @@ local function run(msg, matches, result)
 			end
 			local username = string.gsub(matches[2], '@', '')
 			channel_set_username(receiver, username, ok_username_cb, {receiver=receiver})
-		end
+		end]]
 
 		if matches[1]:lower() == 'setrules' and is_momod(msg) then
 			rules = matches[2]
 			local target = msg.to.id
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] has changed group rules to ["..matches[2].."]")
 			return set_rulesmod(msg, data, target)
 		end
 
 		if msg.media then
 			if msg.media.type == 'photo' and data[tostring(msg.to.id)]['settings']['set_photo'] == 'waiting' and is_momod(msg) then
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] set new SuperGroup photo")
 				load_photo(msg.id, set_supergroup_photo, msg)
 				return
 			end
@@ -2151,8 +2136,7 @@ local function run(msg, matches, result)
 		if matches[1]:lower() == 'setphoto' and is_momod(msg) then
 			data[tostring(msg.to.id)]['settings']['set_photo'] = 'waiting'
 			save_data(_config.moderation.data, data)
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] started setting new SuperGroup photo")
-			return 'Please send the new group photo now'
+			reply_msg(msg.id, "🔱 عکس جدید گروه را بفرستید :", ok_cb, false)
 		end
 
 		if matches[1]:lower() == 'clean' and is_momod(msg) then
@@ -2179,45 +2163,42 @@ local function run(msg, matches, result)
                       end
 			if matches[2] == 'modlist' then
 				if next(data[tostring(msg.to.id)]['moderators']) == nil then
-					return 'No moderator(s) in this SuperGroup.'
+					return reply_msg(msg.id, "🚫 در این گروه مدیری وجود ندارد !", ok_cb, false)
 				end
 				for k,v in pairs(data[tostring(msg.to.id)]['moderators']) do
 					data[tostring(msg.to.id)]['moderators'][tostring(k)] = nil
 					save_data(_config.moderation.data, data)
 				end
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] cleaned modlist")
-				return 'Modlist has been cleaned'
+				return reply_msg(msg.id, "✅ لیست مدیران گروه پاک شد !", ok_cb, false)
 			end
 			if matches[2] == 'rules' then
 				local data_cat = 'rules'
 				if data[tostring(msg.to.id)][data_cat] == nil then
-					return "Rules have not been set"
+					return reply_msg(msg.id, "🚫 قوانین گروه تنظیم نشده است !", ok_cb, false)
 				end
 				data[tostring(msg.to.id)][data_cat] = nil
 				save_data(_config.moderation.data, data)
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] cleaned rules")
-				return 'Rules have been cleaned'
+				return reply_msg(msg.id, "✅ قوانین گروه پاک شد !", ok_cb, false)
 			end
 			if matches[2] == 'about' then
 				local receiver = get_receiver(msg)
 				local about_text = ' '
 				local data_cat = 'description'
 				if data[tostring(msg.to.id)][data_cat] == nil then
-					return 'About is not set'
+					return reply_msg(msg.id, "🚫 توضیحات گروه تنظیم نشده است !", ok_cb, false)
 				end
 				data[tostring(msg.to.id)][data_cat] = nil
 				save_data(_config.moderation.data, data)
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] cleaned about")
 				channel_set_about(receiver, about_text, ok_cb, false)
-				return "About has been cleaned"
+				return reply_msg(msg.id, "✅ توضیحات گروه پاک شد !", ok_cb, false)
 			end
 			if matches[2] == 'mutelist' then
 				chat_id = msg.to.id
 				local hash =  'mute_user:'..chat_id
 					redis:del(hash)
-				return "Mutelist Cleaned"
+				return reply_msg(msg.id, "✅ لیست افراد بیصدا پاک شد !", ok_cb, false)
 			end
-			if matches[2] == 'username' and is_admin1(msg) then
+			--[[if matches[2] == 'username' and is_admin1(msg) then
 				local function ok_username_cb (extra, success, result)
 					local receiver = extra.receiver
 					if success == 1 then
@@ -2228,9 +2209,8 @@ local function run(msg, matches, result)
 				end
 				local username = ""
 				channel_set_username(receiver, username, ok_username_cb, {receiver=receiver})
-			end
+			end]]
 			if matches[2] == "bots" and is_momod(msg) then
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked all SuperGroup bots")
 				channel_get_bots(receiver, callback_clean_bots, {msg = msg})
 			end
 		end
@@ -2387,7 +2367,6 @@ local function run(msg, matches, result)
 
          if matches[1]:lower() == "padmin" and is_owner(msg) then
                   member_type = 'Admins'
-                  --savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested SuperGroup Admins list")
                   admins = channel_get_admins(receiver,promoteadmin, {receiver = receiver, msg = msg, member_type = member_type})
                 end
 		
@@ -2417,12 +2396,10 @@ local function run(msg, matches, result)
 				local user_id = matches[2]
 				if is_muted_user(chat_id, user_id) then
 					unmute_user(chat_id, user_id)
-					savelog(msg.to.id, name_log.." ["..msg.from.id.."] removed ["..user_id.."] from the muted users list")
-					return "["..user_id.."] removed from the muted users list"
+					return "🔊 کاربر <b>["..user_id.."] </b>از لیست افراد بی صدا حذف شد !"
 				elseif is_owner(msg) then
 					mute_user(chat_id, user_id)
-					savelog(msg.to.id, name_log.." ["..msg.from.id.."] added ["..user_id.."] to the muted users list")
-					return "["..user_id.."] added to the muted user list"
+					return "🔇 کاربر <b>["..user_id.."] </b>به لیست افراد بی صدا اضافه شد !"
 				end
 			elseif matches[1]:lower() == "mute" and matches[2] and not string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
@@ -2460,7 +2437,7 @@ local function run(msg, matches, result)
 		end
 
 		--Admin Join Service Message
-		if msg.service then
+		--[[if msg.service then
 		local action = msg.action.type
 			if action == 'chat_add_user_link' then
 				if is_owner2(msg.from.id) then
@@ -2486,7 +2463,7 @@ local function run(msg, matches, result)
 					channel_set_mod(receiver, user, ok_cb, false)
 				end
 			end
-		end
+		end]]
 		if matches[1]:lower() == 'msg.to.peer_id' and is_sudo(msg) then
 			post_large_msg(receiver, msg.to.peer_id)
 		end
@@ -2514,13 +2491,13 @@ return {
             "^([Ww][Hh][Oo])$",
             "^([Rr][Ee][Ss]) (.*)$",
             "^([Kk][Ii][Cc][Kk][Ee][Dd])$",
-            "^(invall)$",
+            "^([Ii][Nn][Vv][Aa][Ll][Ll])$",
 
             "^([Kk][Ii][Cc][Kk]) (.*)",
             "^([Kk][Ii][Cc][Kk])",
 
             "^([Tt][Oo][Ss][Uu][Pp][Ee][Rr])$",
-            "^(invall)$",
+            "^([Ii][Nn][Vv][Aa][Ll][Ll])$",
 
             "^([Ii][Dd])$",
             "^([Ii][Dd]) (.*)$",
@@ -2559,15 +2536,15 @@ return {
         "^([https?://w]*.?telegram.me/joinchat/%S+)$",
 		
 	"msg.to.peer_id",
-	"%[(document)%]",
+	--"%[(document)%]",
 	"%[(photo)%]",
-	"%[(video)%]",
-	"%[(audio)%]",
-	"%[(contact)%]",
-	"^!!tgservice (.+)$",
+	--"%[(video)%]",
+	--"%[(audio)%]",
+	--"%[(contact)%]",
+	--"^!!tgservice (.+)$",
   },
   run = run,
-  pre_process = pre_process
+ --pre_process = pre_process
 }
 --End supergrpup.lua
 --By @Rondoozle
