@@ -229,11 +229,10 @@ local function promoteadmin(cb_extra, success, result)
   local member_type = cb_extra.member_type
   local text = "✳️ افراد زیر همگی در ربات مدیر شدند :"
   for k,v in pairsByKeys(result) do
-    if v.username and v.first_name or v.last_name then
+    if v.first_name or v.last_name and v.username then
       promote(cb_extra.receiver,v.username,v.peer_id)
-    end
-    if not v.username and v.first_name or v.last_name then
-      promote3(cb_extra.receiver,v.first_name,v.peer_id)
+      elseif not v.username and v.first_name or v.last_name then
+      promote3(cb_extra.receiver,v.first_name,v.peer_id)			
     end
     vname = v.first_name:gsub("‮", "")
     name = vname:gsub("_", " ")
