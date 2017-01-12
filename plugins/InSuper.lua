@@ -1648,7 +1648,8 @@ elseif get_cmd == "setadmin" then
 		end
 	end
  end
-send_large_msg(receiver, text)
+--send_large_msg(receiver, text)
+reply_msg(result.id, text, ok_cb, false)	
 end
 --End non-channel_invite username actions
 
