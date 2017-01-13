@@ -1234,6 +1234,7 @@ local message = '🔰 لیست مدیران گروه <b>'..msg.to.title..' </b>:
     message = message ..i..' - '..v..' [' ..k.. '] \n'
     i = i + 1
   end
+  message = message:gsub("(at)","@")	
   return message
 end
 
