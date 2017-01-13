@@ -78,6 +78,15 @@ local hash10 = 'strict:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
+					
+				local is_tag_title = msg.media.title:match("@")
+				if is_tag_title then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end
+					
 			end
 			if msg.media.description then
 				local is_link_desc = msg.media.description:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]") or msg.media.description:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]") or msg.media.description:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]") or msg.media.description:match("[Tt].[Mm][Ee]")				
@@ -94,6 +103,15 @@ local hash10 = 'strict:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
+					
+				local is_tag_desc = msg.media.description:match("@")
+				if is_tag_desc then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end
+					
 			end
 			if msg.media.caption then -- msg.media.caption checks
 				local is_link_caption = msg.media.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]") or msg.media.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]") or msg.media.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]") or msg.media.caption:match("[Tt].[Mm][Ee]")				
@@ -110,8 +128,8 @@ local hash10 = 'strict:'..msg.to.id
 							kick_user(msg.from.id, msg.to.id)
 						end
 					end
-				local is_username_caption = msg.media.caption:match("^@[%a%d]")
-				if is_username_caption and redis:get(hash1) then
+				local is_username_caption = msg.media.caption:match("@")
+				if is_username_caption then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -187,6 +205,14 @@ local hash10 = 'strict:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
+					
+				local is_tag_title = msg.fwd_from.title:match("@")
+				if is_tag_title then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end					
 			end
 			if is_muted_user(msg.to.id, msg.fwd_from.peer_id) then
 				delete_msg(msg.id, ok_cb, false)
