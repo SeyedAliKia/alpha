@@ -36,6 +36,13 @@ local hash10 = 'strict:'..msg.to.id
 					kick_user(msg.from.id, msg.to.id)
 				end
 		end
+			local is_en_msg = msg.text:match("[a-z]")
+			if is_en_msg then
+				delete_msg(msg.id, ok_cb, false)
+				if redis:get(hash10) or to_chat then
+					kick_user(msg.from.id, msg.to.id)
+				end
+		end				
 			local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]") or msg.text:match("[Tt].[Mm][Ee]") or msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]")
 			if is_link_msg and redis:get(hash1) then
 				delete_msg(msg.id, ok_cb, false)
