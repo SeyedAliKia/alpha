@@ -36,7 +36,7 @@ local hash10 = 'strict:'..msg.to.id
 					kick_user(msg.from.id, msg.to.id)
 				end
 		end
-			local is_en_msg = msg.text:match("[a-z]")
+			local is_en_msg = msg.text:match("[a-z]") or msg.text:match("[A-Z]") 
 			if is_en_msg then
 				delete_msg(msg.id, ok_cb, false)
 				if redis:get(hash10) or to_chat then
@@ -86,6 +86,14 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 					
+				local is_en_title = msg.media.title:match("[a-z]") or msg.media.title:match("[A-Z]")
+				if is_en_title then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end
+					
 				local is_tag_title = msg.media.title:match("@")
 				if is_tag_title then
 					delete_msg(msg.id, ok_cb, false)
@@ -118,7 +126,13 @@ local hash10 = 'strict:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
-					
+				local is_en_desc = msg.media.description:match("[a-z]") or msg.media.description:match("[A-Z]")
+				if is_en_desc then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end					
 			end
 			if msg.media.caption then -- msg.media.caption checks
 				local is_link_caption = msg.media.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]") or msg.media.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]") or msg.media.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]") or msg.media.caption:match("[Tt].[Mm][Ee]")				
@@ -142,6 +156,13 @@ local hash10 = 'strict:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
+				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]")
+				if is_en_caption then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end					
 				if redis:get(hash8) and msg.media.caption:match("sticker.webp") then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
@@ -219,7 +240,15 @@ local hash10 = 'strict:'..msg.to.id
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
 					end
-				end					
+				end
+					
+				local is_en_title = msg.fwd_from.title:match("[a-z]") or msg.fwd_from.title:match("[A-Z]")
+				if is_en_title then
+					delete_msg(msg.id, ok_cb, false)
+					if redis:get(hash10) or to_chat then
+						kick_user(msg.from.id, msg.to.id)
+					end
+				end						
 			end
 			if is_muted_user(msg.to.id, msg.fwd_from.peer_id) then
 				delete_msg(msg.id, ok_cb, false)
