@@ -179,7 +179,7 @@ else
 	vname = v.first_name:gsub("‮", "")
 	name = vname:gsub("_", " ")
 	end
-		text = text.."\n"..i.." - <b>"..name.." </b> <i>["..v.peer_id.."] </i>"
+		text = text.."\n"..i.." - <b>"..name.." </b>["..v.peer_id.."]"
 		i = i + 1
 	end
     --send_large_msg(cb_extra.receiver, text)
