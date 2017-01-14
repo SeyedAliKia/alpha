@@ -32,7 +32,7 @@ local hash12 = 'english:'..msg.to.id
 				end
 			end
 			 if msg.text:match("%[(unsupported)%]") then
-				delete_msg(msg.id, ok_cb, false)
+				delete_msg(msg.id, ok_cb, true)
 				if redis:get(hash10) or to_chat then
 					delete_msg(msg.id, ok_cb, false)
 					kick_user(msg.from.id, msg.to.id)
