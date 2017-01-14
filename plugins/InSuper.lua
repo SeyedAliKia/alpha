@@ -207,7 +207,7 @@ local function callback_kicked2(cb_extra, success, result)
     end
   end
   --send_large_msg(cb_extra.receiver, text)
-  reply_msg(cb_extra.msg.id, text, ok_cb,false)		
+  reply_msg(cb_extra.result.id, text, ok_cb,false)		
 end
 
 local function promote3(receiver, member_name, user_id)
