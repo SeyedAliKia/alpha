@@ -1341,7 +1341,7 @@ end
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
  print('This is a old message!')
- return "s"
+ send_large_msg(extra.receiver, "tt")
  end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
