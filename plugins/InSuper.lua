@@ -1339,6 +1339,10 @@ end
 
 -- Start by reply actions
 function get_message_callback(extra, success, result)
+if type(msg) == 'boolean' then
+ print('This is a old message!')
+ return "s"
+ end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
 	local data = load_data(_config.moderation.data)
@@ -1928,11 +1932,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' then
-  if type(msg) == 'boolean' then
-    print('This is a old message!')
-    return reply_msg(msg.id, '[Not supported] This is a old message!', ok_cb, false)
-  end			
+		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' then		
 			if type(msg.reply_id) ~= "nil" and is_momod(msg) and not matches[2] then
 				local cbreply_extra = {
 					get_cmd = 'id',
