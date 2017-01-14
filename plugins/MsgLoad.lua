@@ -39,7 +39,7 @@ local hash12 = 'english:'..msg.to.id
 				end
 		end
 			local is_en_msg = msg.text:match("[a-z]") or msg.text:match("[A-Z]") 
-			if is_en_msg then
+			if is_en_msg and redis:get(hash12) then
 				delete_msg(msg.id, ok_cb, false)
 				if redis:get(hash10) or to_chat then
 					kick_user(msg.from.id, msg.to.id)
@@ -89,7 +89,7 @@ local hash12 = 'english:'..msg.to.id
 				end
 					
 				local is_en_title = msg.media.title:match("[a-z]") or msg.media.title:match("[A-Z]")
-				if is_en_title then
+				if is_en_title and redis:get(hash12) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -129,7 +129,7 @@ local hash12 = 'english:'..msg.to.id
 					end
 				end
 				local is_en_desc = msg.media.description:match("[a-z]") or msg.media.description:match("[A-Z]")
-				if is_en_desc then
+				if is_en_desc and redis:get(hash12) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
