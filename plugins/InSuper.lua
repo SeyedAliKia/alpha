@@ -1834,7 +1834,7 @@ local function run(msg, matches, result)
 			if not group_owner then
 				return
 			end
-			return reply_msg(msg.id, "🔹 کاربر <b>"..group_owner.." </b>صاحب گروه است !", ok_cb, false)
+			return reply_msg(msg.id, "🔹 کاربر [<b>"..group_owner.."] </b>صاحب گروه است !", ok_cb, false)
 		end
 
 		if matches[1]:lower() == "modlist" then
