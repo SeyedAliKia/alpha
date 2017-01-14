@@ -1935,7 +1935,7 @@ local function run(msg, matches, result)
 					msg = msg
 				}
 				get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif type(msg.reply_id) ~= "nil" and matches[2] == "from" and is_momod(msg) then
+			elseif type(msg.reply_id) ~= "nil" and matches[2] == "from" or matches[2] == "از" and is_momod(msg) then
 				local cbreply_extra = {
 					get_cmd = 'idfrom',
 					msg = msg
@@ -2629,6 +2629,7 @@ return {
             "^(شناسه)$",
 		
             "^([Ii][Dd]) (.*)$",
+            "^(شناسه) (.*)$",
 
             "^([Ss]etlink)$",
             "^([Ll][Ii][Nn][Kk])$",
