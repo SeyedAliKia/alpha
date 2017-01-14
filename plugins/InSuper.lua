@@ -1821,7 +1821,7 @@ local function run(msg, matches, result)
 			channel_info(receiver, callback_info, {receiver = receiver, msg = msg})
 		end
 
-		if matches[1]:lower() == "admins" then
+		if matches[1]:lower() == "admins" or matches[1] == "ادمین ها" then
 			if not is_momod(msg) then
 				return
 			end
@@ -2593,9 +2593,13 @@ return {
 		
             "^([Gg][Pp][Ii][Nn][Ff][Oo])$",
             "^([Aa][Dd][Mm][Ii][Nn][Ss])$",
+            "^(ادمین ها)$",
+		
             "^([Pp][Aa][Dd][Mm][Ii][Nn])$",
+		
             "^([Oo][Ww][Nn][Ee][Rr])$",
-            "^(صاحب گروه)$",		
+            "^(صاحب گروه)$",
+		
             "^([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
             "^([Bb][Oo][Tt][Ss])$",
             "^([Ww][Hh][Oo])$",
