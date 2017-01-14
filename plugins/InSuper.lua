@@ -186,7 +186,7 @@ else
    reply_msg(cb_extra.msg.id, text, ok_cb,false)	
 end
 
-local function muted_user_list(chat_id)
+local function muted_user_list(msg, chat_id)
 	local hash =  'mute_user:'..chat_id
 	local list = redis:smembers(hash)
 	local text = "🔇 کاربران بیصدا شده گروه <b>"..msg.to.title.." </b>\n"
@@ -2535,8 +2535,7 @@ local function run(msg, matches, result)
 		end
 
 		if matches[1]:lower() == "mutelist" and is_momod(msg) then
-			local chat_id = msg.to.id
-			return reply_msg(msg.id, muted_user_list(chat_id), ok_cb, false)
+			return reply_msg(msg.id, muted_user_list(msg, msg.to.id), ok_cb, false)
 		end
 
 		if matches[1]:lower() == 'settings' and is_momod(msg) then
