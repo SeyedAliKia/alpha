@@ -79,21 +79,16 @@ local function pre_process(msg)
     if msgs > max_msg then
 	  local user = msg.from.id
 	  local chat = msg.to.id
-	  local whitelist = "whitelist"
-	  local is_whitelisted = redis:sismember(whitelist, user)
       -- Ignore mods,owner and admins
       if is_momod(msg) then 
         return msg
       end
-	  if is_whitelisted == true then
-		return msg
-	  end
 	  local receiver = get_receiver(msg)
 	  if msg.to.type == 'user' then
 		local max_msg = 7 * 1
 		print(msgs)
 		if msgs >= max_msg then
-			print("Pass2")
+			--print("Pass2")
 			send_large_msg("user#id"..msg.from.id, "User ["..msg.from.id.."] blocked for spam.")
 			block_user("user#id"..msg.from.id,ok_cb,false)--Block user if spammed in private
 		end
