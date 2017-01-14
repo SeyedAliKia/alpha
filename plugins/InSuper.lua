@@ -186,6 +186,23 @@ else
    reply_msg(cb_extra.msg.id, text, ok_cb,false)	
 end
 
+local function muted_user_list(chat_id)
+	local hash =  'mute_user:'..chat_id
+	local list = redis:smembers(hash)
+	local text = "Muted Users for: [ID: "..chat_id.." ]:\n\n"
+	for k,v in pairsByKeys(list) do
+  		local user_info = redis:hgetall('user:'..v)
+		if user_info and user_info.print_name then
+			local print_name = string.gsub(user_info.print_name, "_", " ")
+			local print_name = string.gsub(print_name, "‮", "")
+			text = text..k.." - "..print_name.." ["..v.."]\n"
+		else
+			text = text..k.." - [ "..v.." ]\n"
+		end
+	end
+	return text
+end
+
 local function callback_clean_bots (extra, success, result)
 	local msg = extra.msg
 	local receiver = 'channel#id'..msg.to.id
