@@ -15,6 +15,8 @@ local hash7 = 'tgservice:'..msg.to.id
 local hash8 = 'sticker:'..msg.to.id
 local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
+local hash11 = 'username:'..msg.to.id
+local hash12 = 'english:'..msg.to.id	
 			
 		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) then
 			delete_msg(msg.id, ok_cb, false)
@@ -29,8 +31,8 @@ local hash10 = 'strict:'..msg.to.id
 					kick_user(msg.from.id, msg.to.id)
 				end
 			end
-			local is_tag_msg = msg.text:match("@")
-			if is_tag_msg then
+			local is_username_msg = msg.text:match("@")
+			if is_username_msg and redis:get(hash11) then
 				delete_msg(msg.id, ok_cb, false)
 				if redis:get(hash10) or to_chat then
 					kick_user(msg.from.id, msg.to.id)
@@ -94,8 +96,8 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 					
-				local is_tag_title = msg.media.title:match("@")
-				if is_tag_title then
+				local is_username_title = msg.media.title:match("@")
+				if is_username_title and redis:get(hash11) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -119,8 +121,8 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 					
-				local is_tag_desc = msg.media.description:match("@")
-				if is_tag_desc then
+				local is_username_desc = msg.media.description:match("@")
+				if is_username_desc and redis:get(hash11) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -143,7 +145,7 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 				local is_squig_caption = msg.media.caption:match("[\216-\219][\128-\191]")
-					if is_squig_caption and lock_arabic == "yes" then
+					if is_squig_caption and redis:get(hash6) then
 						delete_msg(msg.id, ok_cb, false)
 						if redis:get(hash10) or to_chat then
 							kick_user(msg.from.id, msg.to.id)
@@ -157,7 +159,7 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]")
-				if is_en_caption then
+				if is_en_caption and redis:get(hash12) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -234,8 +236,8 @@ local hash10 = 'strict:'..msg.to.id
 					end
 				end
 					
-				local is_tag_title = msg.fwd_from.title:match("@")
-				if is_tag_title then
+				local is_username_title = msg.fwd_from.title:match("@")
+				if is_username_title and redis:get(hash11) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
@@ -243,7 +245,7 @@ local hash10 = 'strict:'..msg.to.id
 				end
 					
 				local is_en_title = msg.fwd_from.title:match("[a-z]") or msg.fwd_from.title:match("[A-Z]")
-				if is_en_title then
+				if is_en_title and redis:get(hash12) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
