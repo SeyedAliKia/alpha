@@ -130,7 +130,11 @@ local hash12 = 'english:'..msg.to.id
 				end
 				local is_en_desc = msg.media.description:match("[a-z]") or msg.media.description:match("[A-Z]")
 				if is_en_desc and redis:get(hash12) then
+						
+				if not msg.media.caption:match("sticker.webp") then						
 					delete_msg(msg.id, ok_cb, false)
+				end
+						
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
 					end
@@ -158,12 +162,15 @@ local hash12 = 'english:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
-				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]") and not msg.media.caption:match("sticker.webp")
+				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]")
 				if is_en_caption and redis:get(hash12) then
+						
+				if not msg.media.caption:match("sticker.webp") then
 					delete_msg(msg.id, ok_cb, false)
+				end			
 					if redis:get(hash10) or to_chat then
 						kick_user(msg.from.id, msg.to.id)
-					end
+					end			
 				end					
 				if redis:get(hash8) and msg.media.caption:match("sticker.webp") then
 					delete_msg(msg.id, ok_cb, false)
