@@ -53,7 +53,9 @@ local hash7 = 'tgservice:'..msg.to.id
 local hash8 = 'sticker:'..msg.to.id
 local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
-local hash11 = 'flood:'..msg.to.id			
+local hash11 = 'flood:'..msg.to.id
+local hash12 = 'username:'..msg.to.id
+	
 redis:set(hash1,true)
 redis:set(hash2,true)
 redis:del(hash3)
@@ -64,7 +66,9 @@ redis:set(hash7,true)
 redis:del(hash8)
 redis:del(hash9)
 redis:del(hash10)			
-redis:set(hash11,true)						
+redis:set(hash11,true)	
+redis:del(hash12)
+			
       local text = '✅ گروه <b>'..msg.to.title..' </b>به لیست گروه های تحت مدیریت ربات افزوده شد !'
       return reply_msg(msg.id, text, ok_cb, false)
     end
@@ -103,6 +107,9 @@ local hash7 = 'tgservice:'..msg.to.id
 local hash8 = 'sticker:'..msg.to.id
 local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
+local hash11 = 'flood:'..msg.to.id
+local hash11 = 'username:'..msg.to.id
+			
 redis:del(hash1)
 redis:del(hash2)
 redis:del(hash3)
@@ -112,7 +119,10 @@ redis:del(hash6)
 redis:del(hash7)
 redis:del(hash8)
 redis:del(hash9)
-redis:del(hash10)			
+redis:del(hash10)
+redis:del(hash11)			
+redis:del(hash12)			
+			
       local text = '🚫 گروه <b>'..msg.to.title..' </b>از لیست گروه های تحت مدیریت ربات پاک شد !'
       return reply_msg(msg.id, text, ok_cb, false)
     end
@@ -348,6 +358,72 @@ local function unlock_group_links(msg, data, target)
     --local hash = 'link:'..msg.to.id
     redis:del(hash)
     return reply_msg(msg.id,"🔏 قفل #لینک غیرفعال شد !", ok_cb, false)
+  end
+end
+
+local function lock_group_username(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'username:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #یوزرنیم از قبل فعال است !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_link'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #یوزرنیم فعال شد !", ok_cb, false)
+  end
+end
+
+local function unlock_group_username(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'username:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #یوزرنیم فعال نیست !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_link'] = 'no'
+    --save_data(_config.moderation.data, data)
+    --local hash = 'link:'..msg.to.id
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #یوزرنیم غیرفعال شد !", ok_cb, false)
+  end
+end
+
+local function lock_group_en(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'english:'..msg.to.id
+  if redis:get(hash) then
+    return reply_msg(msg.id,"🔐 قفل #انگلیسی از قبل فعال است !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_link'] = 'yes'
+    --save_data(_config.moderation.data, data)
+    redis:set(hash, true)
+    return reply_msg(msg.id,"🔒 قفل #انگلیسی فعال شد !", ok_cb, false)
+  end
+end
+
+local function unlock_group_en(msg, data, target)
+  if not is_momod(msg) then
+    return
+  end
+  --local group_link_lock = data[tostring(target)]['settings']['lock_link']
+  local hash = 'english:'..msg.to.id
+  if not redis:get(hash) then
+    return reply_msg(msg.id,"🔓 قفل #انگلیسی فعال نیست !", ok_cb, false)
+  else
+    --data[tostring(target)]['settings']['lock_link'] = 'no'
+    --save_data(_config.moderation.data, data)
+    --local hash = 'link:'..msg.to.id
+    redis:del(hash)
+    return reply_msg(msg.id,"🔏 قفل #انگلیسی غیرفعال شد !", ok_cb, false)
   end
 end
 
@@ -2256,6 +2332,14 @@ local function run(msg, matches, result)
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_links(msg, data, target)
                       end
+                      if matches[2] == 'username' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
+                        return lock_group_username(msg, data, target)
+                      end
+                      if matches[2] == 'english' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
+                        return lock_group_en(msg, data, target)
+                      end			
                       if matches[2] == 'fwd' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_fwd(msg, data, target)
@@ -2327,6 +2411,14 @@ local function run(msg, matches, result)
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
                         return unlock_group_links(msg, data, target)
                       end
+                      if matches[2] == 'username' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
+                        return unlock_group_username(msg, data, target)
+                      end			
+                      if matches[2] == 'english' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
+                        return unlock_group_en(msg, data, target)
+                      end			
                       if matches[2] == 'fwd' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_fwd(msg, data, target)
