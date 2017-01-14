@@ -55,6 +55,7 @@ local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
 local hash11 = 'flood:'..msg.to.id
 local hash12 = 'username:'..msg.to.id
+local hash13 = 'english:'..msg.to.id
 	
 redis:set(hash1,true)
 redis:set(hash2,true)
@@ -68,6 +69,7 @@ redis:del(hash9)
 redis:del(hash10)			
 redis:set(hash11,true)	
 redis:del(hash12)
+redis:del(hash13)
 			
       local text = '✅ گروه <b>'..msg.to.title..' </b>به لیست گروه های تحت مدیریت ربات افزوده شد !'
       return reply_msg(msg.id, text, ok_cb, false)
@@ -108,7 +110,8 @@ local hash8 = 'sticker:'..msg.to.id
 local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
 local hash11 = 'flood:'..msg.to.id
-local hash11 = 'username:'..msg.to.id
+local hash12 = 'username:'..msg.to.id
+local hash13 = 'english:'..msg.to.id	
 			
 redis:del(hash1)
 redis:del(hash2)
@@ -122,6 +125,7 @@ redis:del(hash9)
 redis:del(hash10)
 redis:del(hash11)			
 redis:del(hash12)			
+redis:del(hash13)
 			
       local text = '🚫 گروه <b>'..msg.to.title..' </b>از لیست گروه های تحت مدیریت ربات پاک شد !'
       return reply_msg(msg.id, text, ok_cb, false)
