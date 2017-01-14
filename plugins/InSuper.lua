@@ -1935,6 +1935,16 @@ local function run(msg, matches, result)
 					msg = msg
 				}
 				get_message(msg.reply_id, get_message_callback, cbreply_extra)
+			elseif matches[2] then
+			local cbres_extra = {
+				channelid = msg.to.id,
+				get_cmd = 'res',
+				msg = msg	
+			}
+			local username = matches[2]
+			local username = username:gsub("@","")
+			resolve_username(username,  callbackres, cbres_extra)
+				
 			elseif type(msg.reply_id) ~= "nil" and matches[2] == "from" or matches[2] == "از" and is_momod(msg) then
 				local cbreply_extra = {
 					get_cmd = 'idfrom',
@@ -1951,15 +1961,15 @@ local function run(msg, matches, result)
 				resolve_username(username,  callbackres, cbres_extra)]]
 			else
 					local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
-                    return reply_msg(msg.id,text,ok_cb,false)				
+                                        return reply_msg(msg.id,text,ok_cb,false)				
 			end	
 		end
 
-		if matches[1]:lower() == 'kickme' then
+		--[[if matches[1]:lower() == 'kickme' then
 			if msg.to.type == 'channel' then
 				channel_kick("channel#id"..msg.to.id, "user#id"..msg.from.id, ok_cb, false)
 			end
-		end
+		end]]
 
 		if matches[1]:lower() == 'newlink' and is_momod(msg)then
 			local function callback_link (extra , success, result)
@@ -2015,7 +2025,7 @@ local function run(msg, matches, result)
 			resolve_username(username,  callbackres, cbres_extra)
 		end
 
-		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
+		--[[if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
 			local cbres_extra = {
 				channelid = msg.to.id,
 				get_cmd = 'res'
@@ -2023,7 +2033,7 @@ local function run(msg, matches, result)
 			local username = matches[2]
 			local username = username:gsub("@","")
 			resolve_username(username,  callbackres, cbres_extra)
-		end
+		end]]
 
 			if matches[1]:lower() == 'setadmin' then
 				if not is_support(msg.from.id) and not is_owner(msg) then
