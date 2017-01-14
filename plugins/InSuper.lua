@@ -179,7 +179,7 @@ else
 	vname = v.first_name:gsub("‮", "")
 	name = vname:gsub("_", " ")
 	end
-		tostring(i) = i:gsub("1", "1⃣")
+		i = i:gsub("1", "1⃣")
 		text = text.."\n"..i.." - <b>"..name.." </b><i>["..v.peer_id.."] </i>"
 		i = i + 1
 	end
