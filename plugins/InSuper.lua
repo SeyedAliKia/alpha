@@ -2668,7 +2668,7 @@ return {
             "^([Rr][Uu][Ll][Ee][Ss])$",
             "^([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
             "^([Cc][Ll][Ee][Aa][Nn]) (.*)$",
-            "^([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt]$",
+            "^([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])$",
 
         "^([https?://w]*.?telegram.me/joinchat/%S+)$",
 		
