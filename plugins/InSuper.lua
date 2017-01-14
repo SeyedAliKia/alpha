@@ -202,11 +202,12 @@ local function callback_kicked2(cb_extra, success, result)
   for k,v in pairsByKeys(result) do
     if not is_banned(v.peer_id, cb_extra.receiver) and v.first_name then
       channel_invite(cb_extra.receiver,"user#id"..v.peer_id,ok_cb,false)
-      text = "🔰 "..i.." نفر از لیست مسدود ها به گروه دعوت شدند !"
+      text = "🔰 <b>"..i.." </b>نفر از لیست مسدود ها به گروه دعوت شدند !"
       i = i + 1
     end
   end
-  send_large_msg(cb_extra.receiver, text)
+  --send_large_msg(cb_extra.receiver, text)
+  reply_msg(cb_extra.msg.id, text, ok_cb,false)		
 end
 
 local function promote3(receiver, member_name, user_id)
@@ -1315,7 +1316,8 @@ local message = '🔰 لیست مدیران گروه <b>'..msg.to.title..' </b>:
     i = i + 1
   end
   message = message:gsub("(at)","@")	
-  return message
+  --return message
+  return reply_msg(msg.id, message, ok_cb, false)	
 end
 
 -- Start by reply actions
@@ -1829,7 +1831,7 @@ local function run(msg, matches, result)
 			admins = channel_get_admins(receiver,callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
-		if matches[1]:lower() == "owner" or matches[1] == "صاحب گروه" then
+		if matches[1]:lower() == "owner" or matches[1] == "صاحب گروه" and is_momod(msg) then
 			local group_owner = data[tostring(msg.to.id)]['set_owner']
 			if not group_owner then
 				return
@@ -1837,7 +1839,7 @@ local function run(msg, matches, result)
 			return reply_msg(msg.id, "🔹 کاربر [<b>"..group_owner.."] </b>صاحب گروه است !", ok_cb, false)
 		end
 
-		if matches[1]:lower() == "modlist" then
+		if matches[1]:lower() == "modlist" or matches[1] == "مدیران" and is_momod(msg) then
 			return modlist(msg)
 			-- channel_get_admins(receiver,callback, {receiver = receiver})
 		end
@@ -1847,7 +1849,7 @@ local function run(msg, matches, result)
                   channel_get_kicked(receiver, callback_kicked2, {receiver = receiver})
                 end
 
-		if matches[1]:lower() == "bots" and is_momod(msg) then
+		if matches[1]:lower() == "bots" or matches[1] == "ربات ها" and is_momod(msg) then
 			member_type = 'Bots'
 			channel_get_bots(receiver, callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
@@ -1922,15 +1924,14 @@ local function run(msg, matches, result)
 					msg = msg
 				}
 				get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif msg.text:match("@[%a%d]") then
+			--[[elseif msg.text:match("@[%a%d]") then
 				local cbres_extra = {
 					channelid = msg.to.id,
 					get_cmd = 'id'
 				}
 				local username = matches[2]
 				local username = username:gsub("@","")
-				savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested ID for: @"..username)
-				resolve_username(username,  callbackres, cbres_extra)
+				resolve_username(username,  callbackres, cbres_extra)]]
 			else
 					local text = "شناسه شما : <b> ["..msg.from.id.."] </b>\nشناسه گروه : <b> ["..msg.to.id.."</b>]\nنام شما : <b>"..msg.from.first_name.." </b>\n"
                     return reply_msg(msg.id,text,ok_cb,false)				
@@ -1997,14 +1998,13 @@ local function run(msg, matches, result)
 			resolve_username(username,  callbackres, cbres_extra)
 		end
 
-		if matches[1]:lower() == 'res' and is_owner(msg) then
+		if matches[1]:lower() == 'id' and matches[2] and is_momod(msg) then
 			local cbres_extra = {
 				channelid = msg.to.id,
 				get_cmd = 'res'
 			}
 			local username = matches[2]
 			local username = username:gsub("@","")
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] resolved username: @"..username)
 			resolve_username(username,  callbackres, cbres_extra)
 		end
 
@@ -2602,12 +2602,17 @@ return {
             "^(صاحب گروه)$",
 		
             "^([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
+            "^(مدیران)$",
+		
             "^([Bb][Oo][Tt][Ss])$",
-            "^([Ww][Hh][Oo])$",
-            "^([Rr][Ee][Ss]) (.*)$",
+            "^(ربات ها)$",
+		
+            --"^([Ww][Hh][Oo])$",
             "^([Kk][Ii][Cc][Kk][Ee][Dd])$",
+		
             "^([Ii][Nn][Vv][Aa][Ll][Ll])$",
-
+            "^(دعوت اخراج شده ها)$",
+		
             "^([Kk][Ii][Cc][Kk]) (.*)",
             "^([Kk][Ii][Cc][Kk])",
 
