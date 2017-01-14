@@ -1339,7 +1339,7 @@ end
 
 -- Start by reply actions
 function get_message_callback(extra, success, result)
-if type(msg) == 'boolean' then
+if type(result) == 'boolean' then
  print('This is a old message!')
  return "s"
  end	
