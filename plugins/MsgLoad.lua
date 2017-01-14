@@ -17,9 +17,7 @@ local hash9 = 'contact:'..msg.to.id
 local hash10 = 'strict:'..msg.to.id
 local hash11 = 'username:'..msg.to.id
 local hash12 = 'english:'..msg.to.id	
-			 if not msg.text and not msg.media and not msg.service and not msg.media.description and not msg.media.caption and not msg.fwd_from then
-                           print("s")
-			end				
+				
 		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) then
 			delete_msg(msg.id, ok_cb, false)
 		end
