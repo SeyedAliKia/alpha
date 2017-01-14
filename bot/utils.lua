@@ -1098,7 +1098,7 @@ function mutes_list(chat_id)
 end
 
 -- Returns chat_user mute list
-function muted_user_list(chat_id)
+--[[function muted_user_list(chat_id)
 	local hash =  'mute_user:'..chat_id
 	local list = redis:smembers(hash)
 	local text = "Muted Users for: [ID: "..chat_id.." ]:\n\n"
@@ -1113,7 +1113,7 @@ function muted_user_list(chat_id)
 		end
 	end
 	return text
-end
+end]]
 
 --End Chat Mutes
 
