@@ -1341,6 +1341,7 @@ end
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
  print('This is a old message!')
+  result = tostring(result)		
   return send_large_msg("channel#id"..result.to.peer_id, "You can't kick mods/owner/admins")
  end	
 	local get_cmd = extra.get_cmd
