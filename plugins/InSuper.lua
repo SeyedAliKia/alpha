@@ -1803,7 +1803,7 @@ local function run(msg, matches, result)
 			channel_set_admin(receiver, 'user#id'..msg.from.id, ok_cb, false)
 		end
 
-		if matches[1]:lower() == 'rem' and is_admin1(msg) and not matches[2] then
+		if matches[1]:lower() == 'rem' or matches[1] == 'حذف' and is_admin1(msg) and not matches[2] then
 			if not is_super_group(msg) then
                          return reply_msg(msg.id, '❇️ گروه <b>'..msg.to.title..' </b>در لیست گروه های تحت مدیریت ربات نیست !', ok_cb, false)
 			end
