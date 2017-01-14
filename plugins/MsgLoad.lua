@@ -18,11 +18,7 @@ local hash10 = 'strict:'..msg.to.id
 local hash11 = 'username:'..msg.to.id
 local hash12 = 'english:'..msg.to.id	
 			 if msg.text and msg.text:match("%[(unsupported)%]") then
-				delete_msg(msg.id, ok_cb, false)
-				if redis:get(hash10) or to_chat then
-					delete_msg(msg.id, ok_cb, false)
-					kick_user(msg.from.id, msg.to.id)
-				end
+                           print("s")
 			end				
 		if msg and not msg.service and is_muted(msg.to.id, 'All: yes') or is_muted_user(msg.to.id, msg.from.id) then
 			delete_msg(msg.id, ok_cb, false)
