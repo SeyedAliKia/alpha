@@ -1829,7 +1829,7 @@ local function run(msg, matches, result)
 			admins = channel_get_admins(receiver,callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
-		if matches[1]:lower() == "owner" or matches[1] == 'صاحب گروه' then
+		if matches[1]:lower() == "owner" or matches[1] == "صاحب گروه" then
 			local group_owner = data[tostring(msg.to.id)]['set_owner']
 			if not group_owner then
 				return
