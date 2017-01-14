@@ -207,7 +207,7 @@ local function callback_kicked2(cb_extra, success, result)
     end
   end
   --send_large_msg(cb_extra.receiver, text)
-  reply_msg(cb_extra.result.id, text, ok_cb,false)		
+  reply_msg(cb_extra.msg.id, text, ok_cb,false)		
 end
 
 local function promote3(receiver, member_name, user_id)
@@ -1846,7 +1846,7 @@ local function run(msg, matches, result)
 		
 	       if matches[1]:lower() == "invall" and is_momod(msg) then
                   --savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested Kicked users list")
-                  channel_get_kicked(receiver, callback_kicked2, {receiver = receiver})
+                  channel_get_kicked(receiver, callback_kicked2, {receiver = receiver, msg = msg})
                 end
 
 		if matches[1]:lower() == "bots" or matches[1] == "ربات ها" and is_momod(msg) then
@@ -1854,10 +1854,10 @@ local function run(msg, matches, result)
 			channel_get_bots(receiver, callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
-		if matches[1]:lower() == "who" and not matches[2] and is_momod(msg) then
+		--[[if matches[1]:lower() == "who" and not matches[2] and is_momod(msg) then
 			local user_id = msg.from.peer_id
 			channel_get_users(receiver, callback_who, {receiver = receiver})
-		end
+		end]]
 
 		if matches[1]:lower() == "kicked" and is_momod(msg) then
 			channel_get_kicked(receiver, callback_kicked, {receiver = receiver})
