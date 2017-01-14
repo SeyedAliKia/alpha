@@ -158,7 +158,7 @@ local hash12 = 'english:'..msg.to.id
 						kick_user(msg.from.id, msg.to.id)
 					end
 				end
-				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]")
+				local is_en_caption = msg.media.caption:match("[a-z]") or msg.media.caption:match("[A-Z]") and not msg.media.caption:match("sticker.webp")
 				if is_en_caption and redis:get(hash12) then
 					delete_msg(msg.id, ok_cb, false)
 					if redis:get(hash10) or to_chat then
