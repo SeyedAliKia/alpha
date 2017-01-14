@@ -1844,8 +1844,7 @@ local function run(msg, matches, result)
 			-- channel_get_admins(receiver,callback, {receiver = receiver})
 		end
 		
-	       if matches[1]:lower() == "invall" and is_momod(msg) then
-                  --savelog(msg.to.id, name_log.." ["..msg.from.id.."] requested Kicked users list")
+	       if matches[1]:lower() == "invall" or matches[1] == "دعوت اخراج شده ها" and is_momod(msg) then
                   channel_get_kicked(receiver, callback_kicked2, {receiver = receiver, msg = msg})
                 end
 
@@ -1859,18 +1858,19 @@ local function run(msg, matches, result)
 			channel_get_users(receiver, callback_who, {receiver = receiver})
 		end]]
 
-		if matches[1]:lower() == "kicked" and is_momod(msg) then
+		--[[if matches[1]:lower() == "kicked" and is_momod(msg) then
 			channel_get_kicked(receiver, callback_kicked, {receiver = receiver})
-		end
+		end]]
 
 		if matches[1]:lower() == 'del' and is_momod(msg) then
 			if type(msg.reply_id) ~= "nil" then
-				local cbreply_extra = {
+				--[[local cbreply_extra = {
 					get_cmd = 'del',
 					msg = msg
-				}
+				}]]
 				delete_msg(msg.id, ok_cb, false)
-				get_message(msg.reply_id, get_message_callback, cbreply_extra)
+				delete_msg(msg.reply_id, ok_cb, false)
+				--get_message(msg.reply_id, get_message_callback, cbreply_extra)
 			end
 		end
 
