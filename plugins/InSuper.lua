@@ -179,9 +179,8 @@ else
 	vname = v.first_name:gsub("‮", "")
 	name = vname:gsub("_", " ")
 	end
-		i = tostring(i):gsub("1", "1⃣")
 		text = text.."\n"..i.." - <b>"..name.." </b><i>["..v.peer_id.."] </i>"
-		i = tonumber(i) + 1
+		i = i + 1
 	end
     --send_large_msg(cb_extra.receiver, text)
    reply_msg(cb_extra.msg.id, text, ok_cb,false)	
