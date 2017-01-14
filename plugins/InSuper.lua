@@ -2025,11 +2025,9 @@ local function run(msg, matches, result)
 			resolve_username(username,  callbackres, cbres_extra)
 		end
 
-		--[[if matches[1]:lower() == 'kick' and is_momod(msg) then
-			local receiver = channel..matches[3]
-			local user = "user#id"..matches[2]
-			chaannel_kick(receiver, user, ok_cb, false)
-		end]]
+		if matches[1]:lower() == 'kick' and is_momod(msg) then
+			kick_user(msg.reply_id, msg.to.id)
+		end
 
 			if matches[1]:lower() == 'setadmin' then
 				if not is_support(msg.from.id) and not is_owner(msg) then
@@ -2630,6 +2628,8 @@ return {
             "^(دعوت اخراج شده ها)$",
 		
             "^([Kk][Ii][Cc][Kk]) (.*)",
+            "^(اخراج) (.*)",
+		
             "^([Kk][Ii][Cc][Kk])",
 
             "^([Tt][Oo][Ss][Uu][Pp][Ee][Rr])$",
