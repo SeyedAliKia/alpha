@@ -1306,7 +1306,7 @@ local function modlist(msg)
   end
   -- determine if table is empty
   if next(data[tostring(msg.to.id)]['moderators']) == nil then
-    return reply_msg(msg.id, '📛 فردی در این گروه مدیر نیست !')
+    return reply_msg(msg.id, '📛 فردی در این گروه مدیر نیست !', ok_cb, false)
   end
   local i = 1
 local message = '🔰 لیست مدیران گروه <b>'..msg.to.title..' </b>:\n'
@@ -2592,6 +2592,7 @@ return {
             "^(حذف)$",
 		
             "^([Gg][Pp][Ii][Nn][Ff][Oo])$",
+		
             "^([Aa][Dd][Mm][Ii][Nn][Ss])$",
             "^(ادمین ها)$",
 		
