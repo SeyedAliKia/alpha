@@ -1928,7 +1928,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'id' then
+		if matches[1]:lower() == 'id' or matches[2] == 'شناسه' then
 			if type(msg.reply_id) ~= "nil" and is_momod(msg) and not matches[2] then
 				local cbreply_extra = {
 					get_cmd = 'id',
@@ -2023,10 +2023,6 @@ local function run(msg, matches, result)
 			local username = matches[2]
 			local username = username:gsub("@","")
 			resolve_username(username,  callbackres, cbres_extra)
-		end
-
-		if matches[1]:lower() == 'kick' and is_momod(msg) then
-			kick_user(msg.reply_id, msg.to.id)
 		end
 
 			if matches[1]:lower() == 'setadmin' then
@@ -2626,16 +2622,12 @@ return {
 		
             "^([Ii][Nn][Vv][Aa][Ll][Ll])$",
             "^(دعوت اخراج شده ها)$",
-		
-            "^([Kk][Ii][Cc][Kk]) (.*)",
-            "^(اخراج) (.*)",
-		
-            "^([Kk][Ii][Cc][Kk])",
 
             "^([Tt][Oo][Ss][Uu][Pp][Ee][Rr])$",
-            "^([Ii][Nn][Vv][Aa][Ll][Ll])$",
 
             "^([Ii][Dd])$",
+            "^(شناسه)$",
+		
             "^([Ii][Dd]) (.*)$",
 
             "^([Ss]etlink)$",
