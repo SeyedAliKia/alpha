@@ -1829,7 +1829,7 @@ local function run(msg, matches, result)
 			admins = channel_get_admins(receiver,callback, {receiver = receiver, msg = msg, member_type = member_type})
 		end
 
-		if matches[1]:lower() == "owner" then
+		if matches[1]:lower() == "owner" or matches[1] == 'صاحب گروه' then
 			local group_owner = data[tostring(msg.to.id)]['set_owner']
 			if not group_owner then
 				return
@@ -2488,8 +2488,7 @@ local function run(msg, matches, result)
 			local flood_max = matches[2]
 			data[tostring(msg.to.id)]['settings']['flood_msg_max'] = flood_max
 			save_data(_config.moderation.data, data)
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] set flood to ["..matches[2].."]")
-			return reply_msg(msg.id, '☢ حساسیت اسپم بر روی <b>'..matches[2]..' </b>تنظیم شد ', ok_cb, false)
+			return reply_msg(msg.id, '☢ حساسیت اسپم بر روی <b>'..matches[2]..' </b>تنظیم شد !', ok_cb, false)
 		end
 
 		if matches[1]:lower() == "mute" and is_momod(msg) then
@@ -2596,6 +2595,7 @@ return {
             "^([Aa][Dd][Mm][Ii][Nn][Ss])$",
             "^([Pp][Aa][Dd][Mm][Ii][Nn])$",
             "^([Oo][Ww][Nn][Ee][Rr])$",
+            "^(صاحب گروه)$",		
             "^([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
             "^([Bb][Oo][Tt][Ss])$",
             "^([Ww][Hh][Oo])$",
