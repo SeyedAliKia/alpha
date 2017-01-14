@@ -1928,7 +1928,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'id' or matches[2] == 'شناسه' then
+		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' then
 			if type(msg.reply_id) ~= "nil" and is_momod(msg) and not matches[2] then
 				local cbreply_extra = {
 					get_cmd = 'id',
