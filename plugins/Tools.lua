@@ -35,14 +35,14 @@ do
       return
     end
     local message = '🔹 لیست گروه های ربات :\n\n '
+    local i = 1
     for k,v in pairs(data[tostring(groups)]) do
       local settings = data[tostring(v)]['settings']
-      local i = 1
       for m,n in pairsByKeys(settings) do
         if m == 'set_name' then
           name = n
+          i = i + 1
         end
-        i = i + 1
       end
       message = message .. '️ '..i..' - '.. name .. ' [' .. v .. ']\n\n '
     end
