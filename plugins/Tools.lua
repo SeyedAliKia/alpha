@@ -543,7 +543,11 @@ local jdat = json:decode(title)
 local gif = jdat.src
 local file = download_to_file(gif,'sticker.webp')
 --send_document(get_receiver(msg), file, ok_cb, false)
-reply_document(msg.id, file, ok_cb, false)
+ if not msg.reply_id then			
+  reply_document(msg.id, file, ok_cb, false)
+ else 
+  reply_document(msg.reply_id, file, ok_cb, false)
+ end			
 end
 --------------------------
 -- Show the available plugins
@@ -615,8 +619,8 @@ local title , res = http.request(url2)
 local jdat = json:decode(title)
 local gif = jdat.src
 local file = download_to_file(gif,'t2g.gif')
---send_document(get_receiver(msg), file, ok_cb, false)
-reply_document(msg.id, file, ok_cb, false)
+send_document(get_receiver(msg), file, ok_cb, false)
+--reply_document(msg.id, file, ok_cb, false)
 end
 --------------------------
 if matches[1]:lower() == "love" then
