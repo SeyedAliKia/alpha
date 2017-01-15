@@ -1,3 +1,21 @@
+  local function get_variables_hash2(msg)
+  if msg.to.type == 'chat' or msg.to.type == 'channel' then
+    return 'chat:bot'..msg.to.id..':variables'
+  end
+end 
+
+local function get_value(msg, var_name)
+  local hash = get_variables_hash2(msg)
+  if hash then
+    local value = redis:hget(hash, var_name)
+    if not value then
+      return
+    else
+      reply_msg(msg.id, value, ok_cb, true)
+    end
+  end
+end
+
 local function addword(msg, name)
   local hash = 'chat:'..msg.to.id..':badword'
   redis:hset(hash, name, 'newword')
@@ -94,6 +112,11 @@ local function run(msg, matches)
   elseif not is_momod(msg) then
     return list_variables2(msg, msg.text)
   end
+  
+  if msg.text:match("^(.+)$") then
+  return get_value(msg, matches[1]:lower())
+end  
+  
 end
 
 return {
