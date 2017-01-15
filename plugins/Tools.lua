@@ -719,7 +719,7 @@ local file = download_to_file(url,'love.webp')
 reply_document(msg.id, file, ok_cb, false)
 end
 ---------------------
-if msg.text:match("^(.+)$") then
+if msg.text and msg.text:match("(.+)") then
 return list_variables2(msg, msg.text)
 end
 ---------------------
