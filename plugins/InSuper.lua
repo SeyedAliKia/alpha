@@ -2010,7 +2010,7 @@ local function run(msg, matches, result)
 			end
 			        local slink = http.request('http://api.yon.ir/?url='..URL.escape(group_link))
 			        local jdat = json:decode(slink)
-			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n🔸 لینک کوتاه :\nhttps://yon.ir/"..jdat.output
+			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n<b>- - - - - - -</b>\n🔸 لینک کوتاه :\nhttps://yon.ir/"..jdat.output
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
