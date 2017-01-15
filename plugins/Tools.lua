@@ -40,8 +40,8 @@ do
       
       local settings = data[tostring(v)]['settings']
       for m,n in pairsByKeys(settings) do
-        i = i + 1
         if m == 'set_name' then
+          i = i + 1
           name = n
         end
       end
