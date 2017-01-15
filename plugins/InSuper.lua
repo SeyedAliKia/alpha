@@ -2399,7 +2399,7 @@ local function run(msg, matches, result)
                       end
 		end
 
-		if matches[1]:lower() == 'unlock' and is_momod(msg) then
+		if matches[1]:lower() == 'unlock' or matches[1] == 'باز کردن' and is_momod(msg) then
 			local target = msg.to.id
 			
                       if matches[2] == 'photo' or matches[2] == 'عکس' then
