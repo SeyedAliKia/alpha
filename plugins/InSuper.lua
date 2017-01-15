@@ -1989,7 +1989,7 @@ local function run(msg, matches, result)
 			export_channel_link(receiver, callback_link, false)
 		end
 
-		if matches[1]:lower() == 'setlink' and is_owner(msg) then
+		if matches[1]:lower() == 'setlink' or matches[1] == 'تنظیم لینک' and is_momod(msg) then
 			data[tostring(msg.to.id)]['settings']['set_link'] = 'waiting'
 			save_data(_config.moderation.data, data)
 			return reply_msg(msg.id,'💱 لینک گروه را بفرستید :',ok_cb,false)
@@ -2003,13 +2003,10 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'link' then
-			if not is_momod(msg) then
-				return
-			end
+		if matches[1]:lower() == 'link' or matches[1] == 'لینک' and is_momod(msg) then
 			local group_link = data[tostring(msg.to.id)]['settings']['set_link']
 			if not group_link then
-				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b> ذخیره کنید !',ok_cb,false)
+				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b>یا <i>تنظیم لینک </i>تنظیم کنید !',ok_cb,false)
 			end
 			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link
                                 return reply_msg(msg.id, text, ok_cb, false)
@@ -2642,7 +2639,9 @@ return {
             "^([Ii][Dd]) (.*)$",
             "^(شناسه) (.*)$",
 
-            "^([Ss]etlink)$",
+            "^([Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
+            "^(تنظیم لینک)$",
+		
             "^([Ll][Ii][Nn][Kk])$",
 
             "^([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr]) (.*)$",
