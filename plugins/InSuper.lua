@@ -1340,18 +1340,22 @@ end
 -- Start by reply actions
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
-  print('This is a old message!')
-  reply_msg(extra.msg.id, "tesT", ok_cb, true)
+ print('This is a old message!')
+  result = tostring(result)		
+  return send_large_msg("channel#id"..result.to.peer_id, "You can't kick mods/owner/admins")
  end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
 	local data = load_data(_config.moderation.data)
 	local print_name = user_print_name(msg.from):gsub("‮", "")
 	local name_log = print_name:gsub("_", " ")
+	if type(result) == 'boolean' then
+		print('This is a old message!')
+		return "پیام قدیمی"
+	end
 	if get_cmd == "id" and not result.action then
 		local channel = 'channel#id'..result.to.peer_id
-		--id1 = send_large_msg(channel, result.from.peer_id)
-		id1 = reply_msg(extra.msg.id, result.from.peer_id, ok_cb, false)
+		id1 = send_large_msg(channel, result.from.peer_id)
 	elseif get_cmd == 'id' and result.action then
 		local action = result.action.type
 		if action == 'chat_add_user' or action == 'chat_del_user' or action == 'chat_rename' or action == 'chat_change_photo' then
@@ -1361,14 +1365,13 @@ if type(result) == 'boolean' then
 				user_id = result.peer_id
 			end
 			local channel = 'channel#id'..result.to.peer_id
-			--id1 = send_large_msg(channel, user_id)
-			id1 = reply_msg(extra.msg.id, user_id, ok_cb, false)			
+			savelog(msg.to.id, name_log.." ["..msg.from.id.."] obtained id by service msg for: ["..user_id.."]")
+			id1 = send_large_msg(channel, user_id)
 		end
 	elseif get_cmd == "idfrom" then
 		local channel = 'channel#id'..result.to.peer_id
 		id2 = send_large_msg(channel, result.fwd_from.peer_id)
-		--id2 = reply_msg(extra.msg.id, result.fwd_from.peer_id, ok_cb, false)		
-	--[[elseif get_cmd == 'channel_block' and not result.action then
+	elseif get_cmd == 'channel_block' and not result.action then
 		local member_id = result.from.peer_id
 		local channel_id = result.to.peer_id
     if member_id == msg.from.id then
@@ -1394,9 +1397,10 @@ if type(result) == 'boolean' then
     if is_admin2(member_id) then
          return send_large_msg("channel#id"..channel_id, "You can't kick other admins")
     end
+		savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked: ["..user_id.."] by reply to sev. msg.")
 		kick_user(user_id, channel_id)
 	elseif get_cmd == "del" then
-		delete_msg(result.id, ok_cb, false)]]
+		delete_msg(result.id, ok_cb, false)
 	elseif get_cmd == "setadmin" then
 		local user_id = result.from.peer_id
 		local channel_id = "channel#id"..result.to.peer_id
@@ -1406,6 +1410,7 @@ if type(result) == 'boolean' then
 		else
 			text = "[ "..user_id.." ]set as an admin"
 		end
+		savelog(msg.to.id, name_log.." ["..msg.from.id.."] set: ["..user_id.."] as admin by reply")
 		send_large_msg(channel_id, text)
 	elseif get_cmd == "demoteadmin" then
 		local user_id = result.from.peer_id
@@ -1433,12 +1438,11 @@ if type(result) == 'boolean' then
 			data[tostring(result.to.peer_id)]['set_owner'] = tostring(result.from.peer_id)
 			save_data(_config.moderation.data, data)
 			if result.from.username then
-              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>@"..result.from.username.." به عنوان صاحب گروه ذخیره شد !"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>@"..result.from.username.." به عنوان صاحب گروه انتخاب شد !"
 			else
-              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>به عنوان صاحب گروه ذخیره شد !"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>به عنوان صاحب گروه انتخاب شد !"
 			end
-			--send_large_msg(channel_id, text)
-			reply_msg(extra.msg.id, text, ok_cb, false)
+			send_large_msg(channel_id, text)
 		end
 	elseif get_cmd == "promote" then
 		local receiver = result.to.peer_id
@@ -1558,10 +1562,10 @@ local function callbackres(extra, success, result)
 		local channel = 'channel#id'..extra.channelid
 		send_large_msg(channel, user)
 		return user
- --[[ elseif get_cmd == "invite" then
+  elseif get_cmd == "invite" then
     local receiver = extra.channel
     local user_id = "user#id"..result.peer_id
-    channel_invite(receiver, user_id, ok_cb, false)]]
+    channel_invite(receiver, user_id, ok_cb, false)
 	--[[elseif get_cmd == "channel_block" then
 		local user_id = result.peer_id
 		local channel_id = extra.channelid
@@ -2015,7 +2019,7 @@ local function run(msg, matches, result)
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
-		--[[if matches[1]:lower() == "invite" and is_sudo(msg) then
+		if matches[1]:lower() == "invite" and is_sudo(msg) then
 			local cbres_extra = {
 				channel = get_receiver(msg),
 				get_cmd = "invite"
@@ -2024,7 +2028,7 @@ local function run(msg, matches, result)
 			local username = username:gsub("@","")
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] invited @"..username)
 			resolve_username(username,  callbackres, cbres_extra)
-		end]]
+		end
 
 		--[[if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
 			local cbres_extra = {
