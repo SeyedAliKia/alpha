@@ -2010,7 +2010,7 @@ local function run(msg, matches, result)
 			end
 			        local slink = http.request('http://api.yon.ir/?url='..URL.escape(group_link))
 			        local jdat = json:decode(slink)
-			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n<b>- - - - - - - -</b>\n💠 لینک کوتاه :\nhttps://yon.ir/"..jdat.output
+			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n<b>- - - - - - - -</b>\n💠 لینک کوتاه :\nhttp://yon.ir/"..jdat.output
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
@@ -2134,7 +2134,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'promote' and is_owner(msg) or matches[1] == 'ترفیع' and is_owner(msg) then
+		if matches[1] == 'ترفیع' or matches[1]:lower() == 'promote' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'promote',
