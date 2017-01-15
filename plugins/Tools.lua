@@ -41,10 +41,9 @@ do
       for m,n in pairsByKeys(settings) do
         if m == 'set_name' then
           name = n
-          i = i + 1
         end
+        i = i + 1
       end
-
       message = message .. '️ '..i..' - '.. name .. ' [' .. v .. ']\n\n '
     end
     local file = io.open("./groups/lists/listed_groups.txt", "w")
