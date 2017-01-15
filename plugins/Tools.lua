@@ -37,7 +37,7 @@ do
     local message = '🔹 لیست گروه های ربات :\n\n '
     for k,v in pairs(data[tostring(groups)]) do
       local settings = data[tostring(v)]['settings']
-      local i = 0
+      local i = 1
       for m,n in pairsByKeys(settings) do
         if m == 'set_name' then
           name = n
