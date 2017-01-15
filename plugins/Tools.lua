@@ -1,4 +1,5 @@
 do
+  
   local function tosticker(msg, success, result)
     if success then
       local file = './data/photos/'..msg.from.id..'.webp'
@@ -14,7 +15,7 @@ do
       return 'chat:bot'..msg.to.id..':variables'
     end
   end
-
+ -------------------------------------
   local function get_value(msg, var_name)
     local hash = get_variables_hash2(msg)
     if hash then
@@ -22,27 +23,29 @@ do
       if not value then
         return
       else
-        reply_msg(msg['id'], value, ok_cb, true)
+        reply_msg(msg.id, value, ok_cb, true)
       end
     end
   end
-
+  -------------------------------------
   local function chat_list(msg)
     local data = load_data(_config.moderation.data)
     local groups = 'groups'
     if not data[tostring(groups)] then
-      return 'No groups at the moment'
+      return
     end
     local message = '🔹 لیست گروه های ربات :\n\n '
     for k,v in pairs(data[tostring(groups)]) do
       local settings = data[tostring(v)]['settings']
+      local i = 0
       for m,n in pairsByKeys(settings) do
         if m == 'set_name' then
           name = n
+          i = i +1
         end
       end
 
-      message = message .. '️ '.. name .. ' [' .. v .. ']\n\n '
+      message = message .. '️ '..i..' - '.. name .. ' [' .. v .. ']\n\n '
     end
     local file = io.open("./groups/lists/listed_groups.txt", "w")
     file:write(message)
