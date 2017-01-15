@@ -111,17 +111,6 @@ local function delallchats(msg)
 end
 
   --------------------------
-  local function addword(msg, name)
-    local hash = 'chat:'..msg.to.id..':badword'
-    redis:hset(hash, name, 'newword')
-    local text = "🚫 کلمه <b>"..name.." </b>فیلتر شد !"
-    return reply_msg(msg.id, text, ok_cb, false)
-  end
-
-  local function get_variables_hash(msg)
-    return 'chat:'..msg.to.id..':badword'
-  end
-  --------------------------
   local function get_msgs_user_chat(user_id, chat_id)
     local user_info = {}
     local uhash = 'user:'..user_id
@@ -183,76 +172,12 @@ end
     end
   end
   --------------------------
-  local function list_variablesbad(msg)
-    local hash = get_variables_hash(msg)
-
-    if hash then
-      local names = redis:hkeys(hash)
-      local text = '💢 لیست کلمات فیلتر شده :\n\n'
-      for i=1, #names do
-        text = text..'🔹 '..names[i]..'\n'
-      end
-      --return text
-      return reply_msg(msg.id, text, ok_cb, false)
-    else
-      return
-    end
-  end
-  --------------------------
-  function clear_commandbad(msg, var_name)
-    --Save on redis
-    local hash = get_variables_hash(msg)
-    redis:del(hash, var_name)
-    local text = '🗑 لیست کلمات فیلتر شده خالی شد !'
-    return reply_msg(msg.id, text, ok_cb, false)
-  end
-  --------------------------
   local function urlencode(str)
     str = string.gsub (str, "\n", "\r\n")
     str = string.gsub (str, "([^%w ])",
     function (c) return string.format ("%%%02X", string.byte(c)) end)
       str = string.gsub (str, " ", "+")
       return str
-    end
-    --------------------------
-    local function list_variables2(msg, value)
-      local hash = get_variables_hash(msg)
-
-      if hash then
-        local names = redis:hkeys(hash)
-        local text = ''
-        for i=1, #names do
-          if string.match(value, names[i]) and not is_momod(msg) then
-            if msg.to.type == 'channel' then
-              delete_msg(msg.id,ok_cb,false)
-            else
-              --kick_user(msg.from.id, msg.to.id)
-            end
-            return
-          end
-          --text = text..names[i]..'\n'
-        end
-      end
-    end
-    --------------------------
-    local function get_valuebad(msg, var_name)
-      local hash = get_variables_hash(msg)
-      if hash then
-        local value = redis:hget(hash, var_name)
-        if not value then
-          return
-        else
-          return value
-        end
-      end
-    end
-    --------------------------
-    function clear_commandsbad(msg, cmd_name)
-      --Save on redis
-      local hash = get_variables_hash(msg)
-      redis:hdel(hash, cmd_name)
-      local text = '♨️ کلمه <b>'..cmd_name..' </b>از لیست کلمات فیلتر شده حذف شد !'
-      return reply_msg(msg.id, text, ok_cb, false)
     end
     --------------------------
     -- Returns the key (index) in the config.enabled_plugins table
@@ -579,26 +504,6 @@ local file = download_to_file(url, 'voice.ogg')
 reply_file(msg.id, file, ok_cb, false)
 end
 --------------------------
-if matches[1]:lower() == 'filter' and is_momod(msg) then
-local name = string.sub(matches[2], 1, 50)
-
-local text = addword(msg, name)
-return text
-end
-
-if matches[1]:lower() == 'filterlist' and is_momod(msg) then
-return list_variablesbad(msg)
-end
-
-if matches[1]:lower() == 'clean' and matches[2] == 'filterlist' and is_owner(msg) then
-local asd = '1'
-return clear_commandbad(msg, asd)
-end
-
-if matches[1]:lower() == 'unfilter' and is_momod(msg) then
-return clear_commandsbad(msg, matches[2])
-end
---------------------------
 if matches[1]:lower() == "update" and is_sudo(msg) then
 text = io.popen("git pull "):read('*all')
 --return text
@@ -755,10 +660,6 @@ patterns = {
     "^(value) (+) ([^%s]+) (.+)$",
     "^(value) (-) (.*)$",    
     
-"^([Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
-"^([Uu][Nn][Ff][Ii][Ll][Tt][Ee][Rr]) (.*)$",
-"^([Ff][Ii][Ll][Tt][Ee][Rr][Ll][Ii][Ss][Tt])$",
-"^([Cc][Ll][Ee][Aa][Nn]) ([Ff][Ii][Ll][Tt][Ee][Rr][Ll][Ii][Ss][Tt])$",
 
 "^([Ss][Ee][Tt][Ww][Ll][Cc]) +(.*)$",
 "^([Cc][Ll][Ee][Aa][Nn]) (welcome)$",
@@ -772,7 +673,6 @@ patterns = {
     
 "%[(photo)%]",
     
-"^(.+)$",
 },
 run = run,
 moderated = true, -- set to moderator mode
