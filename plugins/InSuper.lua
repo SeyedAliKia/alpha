@@ -2026,7 +2026,7 @@ local function run(msg, matches, result)
 			resolve_username(username,  callbackres, cbres_extra)
 		end]]
 
-		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
+		--[[if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
 			local cbres_extra = {
 				channelid = msg.to.id,
 				get_cmd = 'res'
