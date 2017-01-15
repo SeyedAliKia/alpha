@@ -1341,7 +1341,7 @@ end
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
   print('This is a old message!')
-  return
+  reply_msg(extra.msg.id, "tesT", ok_cb, false)
  end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
@@ -1361,7 +1361,8 @@ if type(result) == 'boolean' then
 				user_id = result.peer_id
 			end
 			local channel = 'channel#id'..result.to.peer_id
-			id1 = send_large_msg(channel, user_id)
+			--id1 = send_large_msg(channel, user_id)
+			id1 = reply_msg(extra.msg.id, user_id, ok_cb, false)			
 		end
 	elseif get_cmd == "idfrom" then
 		local channel = 'channel#id'..result.to.peer_id
