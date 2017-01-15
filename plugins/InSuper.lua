@@ -1995,7 +1995,7 @@ local function run(msg, matches, result)
 		end
 
 		if msg.text then
-			if msg.text:match("^([https?://w]*.?telegram.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
+			if msg.text:match("^([https?://w]*.?telegram.me/joinchat/%S+)$") or msg.text:match("^([https?://w]*.?t.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
 				data[tostring(msg.to.id)]['settings']['set_link'] = msg.text
 				save_data(_config.moderation.data, data)
                                 return reply_msg(msg.id, "✅ لینک گروه <b>"..msg.to.title.." </b> تنظیم شد !\n "..msg.text.."", ok_cb, false)
@@ -2007,6 +2007,7 @@ local function run(msg, matches, result)
 			if not group_link then
 				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b>یا <i>تنظیم لینک </i>تنظیم کنید !',ok_cb,false)
 			end
+			        group_link = group_link:gsub("telegram.me","t.me")
 			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
@@ -2384,7 +2385,7 @@ local function run(msg, matches, result)
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked Tgservice Actions")
                         return lock_group_tgservice(msg, data, target)
                       end
-                      if matches[2] == 'sticker' or matches[2] == 'استیکر' then
+                      if matches[2] == 'sticker' or matches[2] == 'استیکر' or matches[2] == 'استيكر' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked sticker posting")
                         return lock_group_sticker(msg, data, target)
                       end
@@ -2693,6 +2694,7 @@ return {
             "^(لیست بیصدا)$",
 
             "^([https?://w]*.?telegram.me/joinchat/%S+)$",
+            "^([https?://w]*.?t.me/joinchat/%S+)$",
 		
 	"msg.to.peer_id",
 	--"%[(document)%]",
