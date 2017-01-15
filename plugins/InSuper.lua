@@ -1988,14 +1988,15 @@ local function run(msg, matches, result)
 			export_channel_link(receiver, callback_link, false)
 		end
 
-		if matches[1]:lower() == 'setlink' or matches[1] == 'تنظیم لینک' and is_momod(msg) then
+		if matches[1]:lower() == 'setlink' and is_momod(msg) or matches[1] == 'تنظیم لینک' and is_momod(msg) then
 			data[tostring(msg.to.id)]['settings']['set_link'] = 'waiting'
 			save_data(_config.moderation.data, data)
 			return reply_msg(msg.id,'💱 لینک گروه را بفرستید :',ok_cb,false)
 		end
 
 		if msg.text then
-			if msg.text:match("^([https?://w]*.?telegram.me/joinchat/%S+)$") or msg.text:match("^([https?://w]*.?t.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' and is_owner(msg) then
+			if msg.text:match("^([https?://w]*.?telegram.me/joinchat/%S+)$") or msg.text:match("^([https?://w]*.?t.me/joinchat/%S+)$") and data[tostring(msg.to.id)]['settings']['set_link'] == 'waiting' then
+				if not is_owner(msg) then return end
 				data[tostring(msg.to.id)]['settings']['set_link'] = msg.text
 				save_data(_config.moderation.data, data)
                                 return reply_msg(msg.id, "✅ لینک گروه <b>"..msg.to.title.." </b> تنظیم شد !\n "..msg.text.."", ok_cb, false)
