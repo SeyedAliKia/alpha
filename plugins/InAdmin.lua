@@ -1,3 +1,230 @@
+local function create_group(msg)
+     -- superuser and admins only (because sudo are always has privilege)
+    if is_sudo(msg) or is_realm(msg) and is_admin1(msg) then
+		local group_creator = msg.from.print_name
+		create_group_chat (group_creator, group_name, ok_cb, false)
+		return 'Group [ '..string.gsub(group_name, '_', ' ')..' ] has been created.'
+	end
+end
+
+local function create_realm(msg)
+        -- superuser and admins only (because sudo are always has privilege)
+	if is_sudo(msg) or is_realm(msg) and is_admin1(msg) then
+		local group_creator = msg.from.print_name
+		create_group_chat (group_creator, group_name, ok_cb, false)
+		return 'Realm [ '..string.gsub(group_name, '_', ' ')..' ] has been created.'
+	end
+end
+
+local function killchat(cb_extra, success, result)
+  local receiver = cb_extra.receiver
+  local chat_id = "chat#id"..result.peer_id
+  local chatname = result.print_name
+  for k,v in pairs(result.members) do
+    kick_user_any(v.peer_id, result.peer_id)
+  end
+end
+
+local function killrealm(cb_extra, success, result)
+  local receiver = cb_extra.receiver
+  local chat_id = "chat#id"..result.peer_id
+  local chatname = result.print_name
+  for k,v in pairs(result.members) do
+    kick_user_any(v.peer_id, result.peer_id)
+  end
+end
+
+local function admin_user_promote(receiver, member_username, member_id)
+        local data = load_data(_config.moderation.data)
+        if not data['admins'] then
+                data['admins'] = {}
+            save_data(_config.moderation.data, data)
+        end
+        if data['admins'][tostring(member_id)] then
+            return send_large_msg(receiver, '@'..member_username..' is already an admin.')
+        end
+        data['admins'][tostring(member_id)] = member_username
+        save_data(_config.moderation.data, data)
+	return send_large_msg(receiver, '@'..member_username..' has been promoted as admin.')
+end
+
+local function admin_user_demote(receiver, member_username, member_id)
+    local data = load_data(_config.moderation.data)
+    if not data['admins'] then
+		data['admins'] = {}
+        save_data(_config.moderation.data, data)
+	end
+	if not data['admins'][tostring(member_id)] then
+		send_large_msg(receiver, "@"..member_username..' is not an admin.')
+		return
+    end
+	data['admins'][tostring(member_id)] = nil
+	save_data(_config.moderation.data, data)
+	send_large_msg(receiver, 'Admin @'..member_username..' has been demoted.')
+end
+
+local function username_id(cb_extra, success, result)
+   local mod_cmd = cb_extra.mod_cmd
+   local receiver = cb_extra.receiver
+   local member = cb_extra.member
+   local text = 'No user @'..member..' in this group.'
+   for k,v in pairs(result.members) do
+      vusername = v.username
+      if vusername == member then
+        member_username = member
+        member_id = v.peer_id
+        if mod_cmd == 'addadmin' then
+            return admin_user_promote(receiver, member_username, member_id)
+        elseif mod_cmd == 'removeadmin' then
+            return admin_user_demote(receiver, member_username, member_id)
+        end
+      end
+   end
+   send_large_msg(receiver, text)
+end
+
+local function res_user_support(cb_extra, success, result)
+   local receiver = cb_extra.receiver
+   local get_cmd = cb_extra.get_cmd
+   local support_id = result.peer_id
+	if get_cmd == 'addsupport' then
+		support_add(support_id)
+		send_large_msg(receiver, "User ["..support_id.."] has been added to the support team")
+	elseif get_cmd == 'removesupport' then
+		support_remove(support_id)
+		send_large_msg(receiver, "User ["..support_id.."] has been removed from the support team")
+	end
+end
+
+local function set_log_group(target, data)
+  if not is_admin1(msg) then
+    return
+  end
+  local log_group = data[tostring(target)]['log_group']
+  if log_group == 'yes' then
+    return 'Log group is already set'
+  else
+    data[tostring(target)]['log_group'] = 'yes'
+    save_data(_config.moderation.data, data)
+    return 'Log group has been set'
+  end
+end
+
+local function unset_log_group(msg)
+  if not is_admin1(msg) then
+    return
+  end
+  local log_group = data[tostring(target)]['log_group']
+  if log_group == 'no' then
+    return 'Log group is not set'
+  else
+    data[tostring(target)]['log_group'] = 'no'
+    save_data(_config.moderation.data, data)
+    return 'log group has been disabled'
+  end
+end
+
+local function realms_list(msg)
+    local data = load_data(_config.moderation.data)
+	local realms = 'realms'
+	if not data[tostring(realms)] then
+		return 'No Realms at the moment'
+	end
+	local message = 'List of Realms:\n'
+	for k,v in pairs(data[tostring(realms)]) do
+		local settings = data[tostring(v)]['settings']
+		for m,n in pairs(settings) do
+			if m == 'set_name' then
+				name = n
+			end
+		end
+		local group_owner = "No owner"
+		if data[tostring(v)]['admins_in'] then
+			group_owner = tostring(data[tostring(v)]['admins_in'])
+		end
+		local group_link = "No link"
+		if data[tostring(v)]['settings']['set_link'] then
+			group_link = data[tostring(v)]['settings']['set_link']
+		end
+		message = message .. '- '.. name .. ' (' .. v .. ') ['..group_owner..'] \n {'..group_link.."}\n"
+	end
+	local file = io.open("./groups/lists/realms.txt", "w")
+	file:write(message)
+	file:flush()
+	file:close()
+    return message
+end
+
+local function admin_list(msg)
+    local data = load_data(_config.moderation.data)
+	local admins = 'admins'
+	if not data[tostring(admins)] then
+		data[tostring(admins)] = {}
+		save_data(_config.moderation.data, data)
+	end
+	local message = 'List of global admins:\n'
+	for k,v in pairs(data[tostring(admins)]) do
+		message = message .. '- (at)' .. v .. ' [' .. k .. '] ' ..'\n'
+	end
+	return message
+end
+
+local function cb_user_info(cb_extra, success, result)
+	local receiver = cb_extra.receiver
+	if result.first_name then
+		first_name = result.first_name:gsub("_", " ")
+	else
+		first_name = "None"
+	end
+	if result.last_name then
+		last_name = result.last_name:gsub("_", " ")
+	else
+		last_name = "None"
+	end
+	if result.username then
+		username = "@"..result.username
+	else
+		username = "@[none]"
+	end
+	text = "User Info:\n\nID: "..result.peer_id.."\nFirst: "..first_name.."\nLast: "..last_name.."\nUsername: "..username
+	send_large_msg(receiver, text)
+end
+
+local function admin_promote(msg, admin_id)
+	if not is_sudo(msg) then
+        return "Access denied!"
+    end
+	local admins = 'admins'
+	if not data[tostring(admins)] then
+		data[tostring(admins)] = {}
+		save_data(_config.moderation.data, data)
+	end
+	if data[tostring(admins)][tostring(admin_id)] then
+		return admin_id..' is already an admin.'
+	end
+	data[tostring(admins)][tostring(admin_id)] = admin_id
+	save_data(_config.moderation.data, data)
+	return admin_id..' has been promoted as admin.'
+end
+
+local function admin_demote(msg, admin_id)
+    if not is_sudo(msg) then
+        return "Access denied!"
+    end
+    local data = load_data(_config.moderation.data)
+        local admins = 'admins'
+	if not data[tostring(admins)] then
+		data[tostring(admins)] = {}
+		save_data(_config.moderation.data, data)
+	end
+	if not data[tostring(admins)][tostring(admin_id)] then
+		return admin_id..' is not an admin.'
+	end
+	data[tostring(admins)][tostring(admin_id)] = nil
+	save_data(_config.moderation.data, data)
+	return admin_id..' has been demoted from admin.'
+end
+
 local function set_bot_photo(msg, success, result)
   local receiver = get_receiver(msg)
   if success then
