@@ -1450,7 +1450,6 @@ if type(result) == 'boolean' then
 		end
 		local member_id = result.from.peer_id
 		if result.to.peer_type == 'channel' then
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] promoted mod: @"..member_username.."["..result.from.peer_id.."] by reply")
 		promote2("channel#id"..result.to.peer_id, member_username, member_id)
 	    --channel_set_mod(channel_id, user, ok_cb, false)
 		end
@@ -2098,7 +2097,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'setowner' or matches[1] == 'تنظیم صاحب' and is_owner(msg) then
+		if matches[1]:lower() == 'setowner' or == 'تنظیم صاحب' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'setowner',
@@ -2121,13 +2120,13 @@ local function run(msg, matches, result)
 					local text = "[ "..matches[2].." ] added as owner"
 					return text
 				end]]
-				local	get_cmd = 'setowner'
-				local	msg = msg
+				local get_cmd = 'setowner'
+				local msg = msg
 				local user_id = matches[2]
 				channel_get_users (receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, user_id=user_id})
-			elseif matches[1]:lower() == 'setowner' or matches[1] == 'تنظیم صاحب' and matches[2] and not string.match(matches[2], '^%d+$') then
-				local	get_cmd = 'setowner'
-				local	msg = msg
+			elseif matches[1]:lower() == 'setowner' or  == 'تنظیم صاحب' and matches[2] and not string.match(matches[2], '^%d+$') then
+				local get_cmd = 'setowner'
+				local msg = msg
 				local username = matches[2]
 				local username = string.gsub(matches[2], '@', '')
 				channel_get_users (receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, username=username})
