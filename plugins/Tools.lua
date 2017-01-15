@@ -501,7 +501,11 @@ local url = "http://api.farsireader.com/ArianaCloudService/ReadTextGET?APIKey=6R
 local file = download_to_file(url, 'voice.ogg')
 --reply_file(msg.id, file, ok_cb,false)
 --send_audio(get_receiver(msg), file, ok_cb, false)
-reply_file(msg.id, file, ok_cb, false)
+ if not msg.reply_id then			
+  reply_file(msg.id, file, ok_cb, false)
+ else 
+  reply_file(msg.reply_id, file, ok_cb, false)				
+ end				
 end
 --------------------------
 if matches[1]:lower() == "update" and is_sudo(msg) then
