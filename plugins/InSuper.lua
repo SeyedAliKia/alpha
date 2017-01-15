@@ -1985,7 +1985,6 @@ local function run(msg, matches, result)
 					save_data(_config.moderation.data, data)
 				end
 			end
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] attempted to create a new SuperGroup link")
 			export_channel_link(receiver, callback_link, false)
 		end
 
@@ -2096,14 +2095,14 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'setowner' and is_owner(msg) then
+		if matches[1]:lower() == 'setowner' or matches[1] == 'تنظیم صاحب' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'setowner',
 					msg = msg
 				}
 				setowner = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'setowner' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'setowner' or matches[1] == 'تنظیم صاحب' and matches[2] and string.match(matches[2], '^%d+$') then
 		--[[	local group_owner = data[tostring(msg.to.id)]['set_owner']
 				if group_owner then
 					local receiver = get_receiver(msg)
@@ -2123,7 +2122,7 @@ local function run(msg, matches, result)
 				local	msg = msg
 				local user_id = matches[2]
 				channel_get_users (receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, user_id=user_id})
-			elseif matches[1]:lower() == 'setowner' and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'setowner' or matches[1] == 'تنظیم صاحب' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local	get_cmd = 'setowner'
 				local	msg = msg
 				local username = matches[2]
@@ -2132,19 +2131,19 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'promote' and is_owner(msg) then
+		if matches[1]:lower() == 'promote' or matches[1] == 'ترفیع' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'promote',
 					msg = msg
 				}
 				promote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'promote' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'promote' or matches[1] == 'ترفیع' and matches[2] and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'promote'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1]:lower() == 'promote' and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'promote' or matches[1] == 'ترفیع' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
 					get_cmd = 'promote',
@@ -2168,25 +2167,19 @@ local function run(msg, matches, result)
 			return "ok"
 		end
 
-		if matches[1]:lower() == 'demote' then
-			if not is_momod(msg) then
-				return
-			end
-			if not is_owner(msg) then
-				--return "Only owner/support/admin can promote"
-			end
+		if matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'demote',
 					msg = msg
 				}
 				demote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'demote' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and matches[2] and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'demote'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1]:lower() == 'demote' and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
 					get_cmd = 'demote'
@@ -2197,7 +2190,7 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == "setname" and is_momod(msg) then
+		if matches[1]:lower() == "setname" or matches[1] == "تنظیم نام" and is_momod(msg) then
 			local receiver = get_receiver(msg)
 			local set_name = string.gsub(matches[2], '_', '')
 			rename_channel(receiver, set_name, ok_cb, false)
@@ -2208,7 +2201,7 @@ local function run(msg, matches, result)
 			save_data(_config.moderation.data, data)
 		end
 
-		if matches[1]:lower() == "setabout" and is_momod(msg) then
+		if matches[1]:lower() == "setabout" or matches[1] == "تنظیم توضیحات" and is_momod(msg) then
 			local receiver = get_receiver(msg)
 			local about_text = matches[2]
 			local data_cat = 'description'
@@ -2232,7 +2225,7 @@ local function run(msg, matches, result)
 			channel_set_username(receiver, username, ok_username_cb, {receiver=receiver})
 		end]]
 
-		if matches[1]:lower() == 'setrules' and is_momod(msg) then
+		if matches[1]:lower() == 'setrules' or matches[1] == 'تنظیم قوانین' and is_momod(msg) then
 			rules = matches[2]
 			local target = msg.to.id
 			return set_rulesmod(msg, data, target)
@@ -2244,13 +2237,13 @@ local function run(msg, matches, result)
 				return
 			end
 		end
-		if matches[1]:lower() == 'setphoto' and is_momod(msg) then
+		if matches[1]:lower() == 'setphoto' or matches[1] == 'تنظیم عکس' and is_momod(msg) then
 			data[tostring(msg.to.id)]['settings']['set_photo'] = 'waiting'
 			save_data(_config.moderation.data, data)
 			reply_msg(msg.id, "🔱 عکس جدید گروه را بفرستید :", ok_cb, false)
 		end
 
-		if matches[1]:lower() == 'clean' and is_momod(msg) then
+		if matches[1]:lower() == 'clean' or matches[1] == 'حذف' and is_momod(msg) then
 	           if matches[2]:lower() == 'banlist' and is_momod(msg) then
                         local chat_id = msg.to.id
                         local hash = 'banned:'..chat_id
@@ -2326,80 +2319,80 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'lock' and is_momod(msg) then
+		if matches[1]:lower() == 'lock' or matches[1] == 'قفل' and is_momod(msg) then
 			local target = msg.to.id
 			
-                      if matches[2] == 'photo' then
+                      if matches[2] == 'photo' or matches[2] == 'عکس' then
                         return lock_group_photo(msg, data, target)
                       end
-                      if matches[2] == 'video' then
+                      if matches[2] == 'video' or matches[2] == 'فیلم' then
                         return lock_group_video(msg, data, target)
                       end
-                      if matches[2] == 'gif' then
+                      if matches[2] == 'gif' or matches[2] == 'گیف' then
                         return lock_group_gif(msg, data, target)
                       end
-                      if matches[2] == 'audio' then
+                      if matches[2] == 'audio' or matches[2] == 'صدا' then
                         return lock_group_audio(msg, data, target)
                       end
-                      if matches[2] == 'file' then
+                      if matches[2] == 'file' or matches[2] == 'فایل' then
                         return lock_group_documents(msg, data, target)
                       end
-                      if matches[2] == 'text' then
+                      if matches[2] == 'text' or matches[2] == 'متن' then
                         return lock_group_text(msg, data, target)
                       end
-                      if matches[2] == 'all' then
+                      if matches[2] == 'all' or matches[2] == 'گروه' then
                         return lock_group_all(msg, data, target)
                       end
 
-                      if matches[2] == 'links' then
+                      if matches[2] == 'links' or matches[2] == 'لینک' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_links(msg, data, target)
                       end
-                      if matches[2] == 'username' then
+                      if matches[2] == 'username' or matches[2] == 'یوزرنیم' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_username(msg, data, target)
                       end
-                      if matches[2] == 'english' then
+                      if matches[2] == 'english' or matches[2] == 'انگلیسی' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_en(msg, data, target)
                       end			
-                      if matches[2] == 'fwd' then
+                      if matches[2] == 'fwd' or matches[2] == 'فروارد' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_fwd(msg, data, target)
                       end
-                      if matches[2] == 'reply' then
+                      if matches[2] == 'reply' or matches[1] == 'ریپلای' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_reply(msg, data, target)
                       end
-                      if matches[2] == 'cmd' then
+                      if matches[2] == 'cmd' or matches[2] == 'دستورات' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return lock_group_cmd(msg, data, target)
                       end
-                      if matches[2] == 'spam' then
+                      if matches[2] == 'spam' or matches[2] == 'اسپم' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked spam ")
                         return lock_group_spam(msg, data, target)
                       end
-                      if matches[2] == 'flood' then
+                      if matches[2] == 'flood' or matches[2] == 'رگباری' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked flood ")
                         return lock_group_flood(msg, data, target)
                       end
-                      if matches[2] == 'arabic' then
+                      if matches[2] == 'persian' or matches[2] == 'پارسی' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked arabic ")
                         return lock_group_arabic(msg, data, target)
                       end
-                      if matches[2] == 'tgservice' then
+                      if matches[2] == 'tgservice' or matches[2] == 'سرویس تلگرام' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked Tgservice Actions")
                         return lock_group_tgservice(msg, data, target)
                       end
-                      if matches[2] == 'sticker' then
+                      if matches[2] == 'sticker' or matches[2] == 'استیکر' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked sticker posting")
                         return lock_group_sticker(msg, data, target)
                       end
-                      if matches[2] == 'contacts' then
+                      if matches[2] == 'contacts' or matches[2] == 'مخاطب' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked contact posting")
                         return lock_group_contacts(msg, data, target)
                       end
-                      if matches[2] == 'strict' then
+                      if matches[2] == 'strict' or matches[2] == 'سختگیرانه' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked enabled strict settings")
                         return enable_strict_rules(msg, data, target)
                       end
@@ -2408,96 +2401,89 @@ local function run(msg, matches, result)
 		if matches[1]:lower() == 'unlock' and is_momod(msg) then
 			local target = msg.to.id
 			
-                      if matches[2] == 'photo' then
+                      if matches[2] == 'photo' or matches[2] == 'عکس' then
                         return unlock_group_photo(msg, data, target)
                       end
-                      if matches[2] == 'video' then
+                      if matches[2] == 'video' or matches[2] == 'فیلم' then
                         return unlock_group_video(msg, data, target)
                       end
-                      if matches[2] == 'audio' then
-                        return unlock_group_audio(msg, data, target)
-                      end
-                      if matches[2] == 'gif' then
+                      if matches[2] == 'gif' or matches[2] == 'گیف' then
                         return unlock_group_gif(msg, data, target)
                       end
-                      if matches[2] == 'file' then
+                      if matches[2] == 'audio' or matches[2] == 'صدا' then
+                        return unlock_group_audio(msg, data, target)
+                      end
+                      if matches[2] == 'file' or matches[2] == 'فایل' then
                         return unlock_group_documents(msg, data, target)
                       end
-                      if matches[2] == 'text' then
+                      if matches[2] == 'text' or matches[2] == 'متن' then
                         return unlock_group_text(msg, data, target)
                       end
-                      if matches[2] == 'all' then
+                      if matches[2] == 'all' or matches[2] == 'گروه' then
                         return unlock_group_all(msg, data, target)
                       end
 
-                      if matches[2] == 'links' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
+                      if matches[2] == 'links' or matches[2] == 'لینک' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_links(msg, data, target)
                       end
-                      if matches[2] == 'username' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
+                      if matches[2] == 'username' or matches[2] == 'یوزرنیم' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_username(msg, data, target)
-                      end			
-                      if matches[2] == 'english' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked link posting")
+                      end
+                      if matches[2] == 'english' or matches[2] == 'انگلیسی' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_en(msg, data, target)
                       end			
-                      if matches[2] == 'fwd' then
+                      if matches[2] == 'fwd' or matches[2] == 'فروارد' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_fwd(msg, data, target)
                       end
-                      if matches[2] == 'reply' then
+                      if matches[2] == 'reply' or matches[1] == 'ریپلای' then
                         --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_reply(msg, data, target)
                       end
-                      if matches[2] == 'spam' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked spam")
-                        return unlock_group_spam(msg, data, target)
-                      end
-                      if matches[2] == 'cmd' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked spam")
+                      if matches[2] == 'cmd' or matches[2] == 'دستورات' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked link posting ")
                         return unlock_group_cmd(msg, data, target)
                       end
-                      if matches[2] == 'flood' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked flood")
+                      if matches[2] == 'spam' or matches[2] == 'اسپم' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked spam ")
+                        return unlock_group_spam(msg, data, target)
+                      end
+                      if matches[2] == 'flood' or matches[2] == 'رگباری' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked flood ")
                         return unlock_group_flood(msg, data, target)
                       end
-                      if matches[2] == 'arabic' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked Arabic")
+                      if matches[2] == 'persian' or matches[2] == 'پارسی' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked arabic ")
                         return unlock_group_arabic(msg, data, target)
                       end
-                      if matches[2] == 'member' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked member ")
-                        return unlock_group_membermod(msg, data, target)
-                      end
-                      if matches[2]:lower() == 'rtl' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked RTL chars. in names")
-                        return unlock_group_rtl(msg, data, target)
-                      end
-                      if matches[2] == 'tgservice' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked tgservice actions")
+                      if matches[2] == 'tgservice' or matches[2] == 'سرویس تلگرام' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked Tgservice Actions")
                         return unlock_group_tgservice(msg, data, target)
                       end
-                      if matches[2] == 'sticker' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked sticker posting")
+                      if matches[2] == 'sticker' or matches[2] == 'استیکر' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked sticker posting")
                         return unlock_group_sticker(msg, data, target)
                       end
-                      if matches[2] == 'contacts' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] unlocked contact posting")
+                      if matches[2] == 'contacts' or matches[2] == 'مخاطب' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked contact posting")
                         return unlock_group_contacts(msg, data, target)
                       end
-                      if matches[2] == 'strict' then
-                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked disabled strict settings")
+                      if matches[2] == 'strict' or matches[2] == 'سختگیرانه' then
+                        --savelog(msg.to.id, name_log.." ["..msg.from.id.."] locked enabled strict settings")
                         return disable_strict_rules(msg, data, target)
                       end
+
 		end
 
-         if matches[1]:lower() == "padmin" and is_owner(msg) then
+         if matches[1]:lower() == "padmin" or matches[1] == "ارتقا ادمین ها" and is_owner(msg) then
                   member_type = 'Admins'
                   admins = channel_get_admins(receiver,promoteadmin, {receiver = receiver, msg = msg, member_type = member_type})
                 end
 		
-		if matches[1]:lower() == 'setflood' then
+		if matches[1]:lower() == 'setflood' or matches[1] == 'تنظیم حساسیت' then
 			if not is_momod(msg) then
 				return
 			end
@@ -2510,7 +2496,7 @@ local function run(msg, matches, result)
 			return reply_msg(msg.id, '☢ حساسیت اسپم بر روی <b>'..matches[2]..' </b>تنظیم شد !', ok_cb, false)
 		end
 
-		if matches[1]:lower() == "mute" and is_momod(msg) then
+		if matches[1]:lower() == "mute" or matches[1] == "بیصدا" and is_momod(msg) then
 			local chat_id = msg.to.id
 			local hash = "mute_user"..chat_id
 			local user_id = ""
@@ -2518,7 +2504,7 @@ local function run(msg, matches, result)
 				local receiver = get_receiver(msg)
 				local get_cmd = "mute_user"
 				muteuser = get_message(msg.reply_id, get_message_callback, {receiver = receiver, get_cmd = get_cmd, msg = msg})
-			elseif matches[1]:lower() == "muteuser" and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == "mute" or matches[1] == "بیصدا" and matches[2] and string.match(matches[2], '^%d+$') then
 				local user_id = matches[2]
 				if is_muted_user(chat_id, user_id) then
 					unmute_user(chat_id, user_id)
@@ -2527,7 +2513,7 @@ local function run(msg, matches, result)
 					mute_user(chat_id, user_id)
 					return "🔇 کاربر <b>["..user_id.."] </b>به لیست افراد بی صدا اضافه شد !"
 				end
-			elseif matches[1]:lower() == "mute" and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == "mute" or matches[1] == "بیصدا" and matches[2] and not string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local get_cmd = "mute_user"
 				local username = matches[2]
@@ -2536,16 +2522,16 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == "mutelist" and is_momod(msg) then
+		if matches[1]:lower() == "mutelist" or matches[1] == 'لیست بیصدا' and is_momod(msg) then
 			return reply_msg(msg.id, muted_user_list(msg, msg.to.id), ok_cb, false)
 		end
 
-		if matches[1]:lower() == 'settings' and is_momod(msg) then
+		if matches[1]:lower() == 'settings' or matches[1] == 'تنظیمات' and is_momod(msg) then
 			local target = msg.to.id
 			return show_supergroup_settingsmod(msg, target)
 		end
 
-		if matches[1]:lower() == 'rules' and is_momod(msg) then
+		if matches[1]:lower() == 'rules' or matches[1] == 'قوانین' and is_momod(msg) then
 			return get_rules(msg, data)
 		end
 
@@ -2689,12 +2675,6 @@ return {
 		
             "^([Mm][Uu][Tt][Ee]) (.*)$",
             "^(بیصدا) (.*)$",
-		
-            "^([Uu][Nn][Mm][Uu][Tt][Ee])$",
-            "^(حذف بیصدا)$",
-		
-            "^([Uu][Nn][Mm][Uu][Tt][Ee]) (.*)$",
-            "^(حذف بیصدا) (.*)$",
 
             "^([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
             "^(تنظیمات)$",
@@ -2719,7 +2699,8 @@ return {
 	--"%[(video)%]",
 	--"%[(audio)%]",
 	--"%[(contact)%]",
-	--"^!!tgservice (.+)$",
+	"^!!tgservice (chat_rename)$",
+		
   },
   run = run,
  --pre_process = pre_process
