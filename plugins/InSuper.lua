@@ -2478,7 +2478,7 @@ local function run(msg, matches, result)
 
 		end
 
-         if matches[1]:lower() == "padmin" or matches[1] == "ارتقا ادمین ها" and is_owner(msg) then
+         if matches[1]:lower() == "padmin" or matches[1] == "ترفیع ادمین ها" and is_owner(msg) then
                   member_type = 'Admins'
                   admins = channel_get_admins(receiver,promoteadmin, {receiver = receiver, msg = msg, member_type = member_type})
                 end
@@ -2601,6 +2601,7 @@ return {
             "^(ادمین ها)$",
 		
             "^([Pp][Aa][Dd][Mm][Ii][Nn])$",
+            "^(ترفیع ادمین ها)$",
 		
             "^([Oo][Ww][Nn][Ee][Rr])$",
             "^(صاحب گروه)$",
