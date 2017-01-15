@@ -1366,8 +1366,8 @@ if type(result) == 'boolean' then
 		end
 	elseif get_cmd == "idfrom" then
 		local channel = 'channel#id'..result.to.peer_id
-		--id2 = send_large_msg(channel, result.fwd_from.peer_id)
-		id2 = reply_msg(extra.msg.id, result.fwd_from.peer_id, ok_cb, false)		
+		id2 = send_large_msg(channel, result.fwd_from.peer_id)
+		--id2 = reply_msg(extra.msg.id, result.fwd_from.peer_id, ok_cb, false)		
 	--[[elseif get_cmd == 'channel_block' and not result.action then
 		local member_id = result.from.peer_id
 		local channel_id = result.to.peer_id
@@ -1558,10 +1558,10 @@ local function callbackres(extra, success, result)
 		local channel = 'channel#id'..extra.channelid
 		send_large_msg(channel, user)
 		return user
-  elseif get_cmd == "invite" then
+ --[[ elseif get_cmd == "invite" then
     local receiver = extra.channel
     local user_id = "user#id"..result.peer_id
-    channel_invite(receiver, user_id, ok_cb, false)
+    channel_invite(receiver, user_id, ok_cb, false)]]
 	--[[elseif get_cmd == "channel_block" then
 		local user_id = result.peer_id
 		local channel_id = extra.channelid
@@ -2015,7 +2015,7 @@ local function run(msg, matches, result)
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
-		if matches[1]:lower() == "invite" and is_sudo(msg) then
+		--[[if matches[1]:lower() == "invite" and is_sudo(msg) then
 			local cbres_extra = {
 				channel = get_receiver(msg),
 				get_cmd = "invite"
@@ -2024,9 +2024,9 @@ local function run(msg, matches, result)
 			local username = username:gsub("@","")
 			savelog(msg.to.id, name_log.." ["..msg.from.id.."] invited @"..username)
 			resolve_username(username,  callbackres, cbres_extra)
-		end
+		end]]
 
-		--[[if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
+		if matches[1]:lower() == 'id' or matches[1] == 'شناسه' and matches[2] and is_momod(msg) then
 			local cbres_extra = {
 				channelid = msg.to.id,
 				get_cmd = 'res'
