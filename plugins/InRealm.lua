@@ -39,24 +39,6 @@ local function killrealm(cb_extra, success, result)
   end
 end
 
-local function get_group_type(msg)
-  local data = load_data(_config.moderation.data)
-  if data[tostring(msg.to.id)] then
-    if not data[tostring(msg.to.id)]['group_type'] then
-		if msg.to.type == 'chat' and not is_realm(msg) then
-			data[tostring(msg.to.id)]['group_type'] = 'Group'
-			save_data(_config.moderation.data, data)
-		elseif msg.to.type == 'channel' then
-			data[tostring(msg.to.id)]['group_type'] = 'SuperGroup'
-			save_data(_config.moderation.data, data)
-		end
-    end
-		local group_type = data[tostring(msg.to.id)]['group_type']
-		return group_type
-	else
-    return 'Chat type not found.'
-  end
-end
 
 local function callbackres(extra, success, result)
 --vardump(result)
