@@ -2009,7 +2009,8 @@ local function run(msg, matches, result)
 				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b>یا <i>تنظیم لینک </i>تنظیم کنید !',ok_cb,false)
 			end
 			        local slink = http.request('http://api.yon.ir/?url='..URL.escape(group_link))
-			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n🔸 لینک کوتاه :\n"..slink
+			        local jdat = json:decode(slink)
+			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n🔸 لینک کوتاه :\n"..jdat.output
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
