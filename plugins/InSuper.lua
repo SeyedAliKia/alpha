@@ -1341,7 +1341,7 @@ end
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
   print('This is a old message!')
-  reply_msg(extra.msg.id, "tesT", ok_cb, false)
+  reply_msg(extra.msg.id, "tesT", ok_cb, true)
  end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
@@ -1366,8 +1366,9 @@ if type(result) == 'boolean' then
 		end
 	elseif get_cmd == "idfrom" then
 		local channel = 'channel#id'..result.to.peer_id
-		id2 = send_large_msg(channel, result.fwd_from.peer_id)
-	elseif get_cmd == 'channel_block' and not result.action then
+		--id2 = send_large_msg(channel, result.fwd_from.peer_id)
+		id2 = reply_msg(extra.msg.id, result.fwd_from.peer_id, ok_cb, false)		
+	--[[elseif get_cmd == 'channel_block' and not result.action then
 		local member_id = result.from.peer_id
 		local channel_id = result.to.peer_id
     if member_id == msg.from.id then
@@ -1395,7 +1396,7 @@ if type(result) == 'boolean' then
     end
 		kick_user(user_id, channel_id)
 	elseif get_cmd == "del" then
-		delete_msg(result.id, ok_cb, false)
+		delete_msg(result.id, ok_cb, false)]]
 	elseif get_cmd == "setadmin" then
 		local user_id = result.from.peer_id
 		local channel_id = "channel#id"..result.to.peer_id
@@ -1405,7 +1406,6 @@ if type(result) == 'boolean' then
 		else
 			text = "[ "..user_id.." ]set as an admin"
 		end
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] set: ["..user_id.."] as admin by reply")
 		send_large_msg(channel_id, text)
 	elseif get_cmd == "demoteadmin" then
 		local user_id = result.from.peer_id
@@ -1433,11 +1433,12 @@ if type(result) == 'boolean' then
 			data[tostring(result.to.peer_id)]['set_owner'] = tostring(result.from.peer_id)
 			save_data(_config.moderation.data, data)
 			if result.from.username then
-              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>@"..result.from.username.." به عنوان صاحب گروه انتخاب شد !"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>@"..result.from.username.." به عنوان صاحب گروه ذخیره شد !"
 			else
-              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>به عنوان صاحب گروه انتخاب شد !"
+              text = "👮🏼 کاربر [<b>"..result.from.peer_id.."] </b>به عنوان صاحب گروه ذخیره شد !"
 			end
-			send_large_msg(channel_id, text)
+			--send_large_msg(channel_id, text)
+			reply_msg(extra.msg.id, text, ok_cb, false)
 		end
 	elseif get_cmd == "promote" then
 		local receiver = result.to.peer_id
