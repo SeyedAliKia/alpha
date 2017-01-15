@@ -1340,22 +1340,18 @@ end
 -- Start by reply actions
 function get_message_callback(extra, success, result)
 if type(result) == 'boolean' then
- print('This is a old message!')
-  result2 = tostring(result.to.peer_id)		
-  return send_large_msg("channel#id"..result2, "You can't kick mods/owner/admins")
+  print('This is a old message!')
+  return
  end	
 	local get_cmd = extra.get_cmd
 	local msg = extra.msg
 	local data = load_data(_config.moderation.data)
 	local print_name = user_print_name(msg.from):gsub("‮", "")
 	local name_log = print_name:gsub("_", " ")
-	if type(result) == 'boolean' then
-		print('This is a old message!')
-		return "پیام قدیمی"
-	end
 	if get_cmd == "id" and not result.action then
 		local channel = 'channel#id'..result.to.peer_id
-		id1 = send_large_msg(channel, result.from.peer_id)
+		--id1 = send_large_msg(channel, result.from.peer_id)
+		id1 = reply_msg(extra.msg.id, result.from.peer_id, ok_cb, false)
 	elseif get_cmd == 'id' and result.action then
 		local action = result.action.type
 		if action == 'chat_add_user' or action == 'chat_del_user' or action == 'chat_rename' or action == 'chat_change_photo' then
@@ -1365,7 +1361,6 @@ if type(result) == 'boolean' then
 				user_id = result.peer_id
 			end
 			local channel = 'channel#id'..result.to.peer_id
-			savelog(msg.to.id, name_log.." ["..msg.from.id.."] obtained id by service msg for: ["..user_id.."]")
 			id1 = send_large_msg(channel, user_id)
 		end
 	elseif get_cmd == "idfrom" then
@@ -1397,7 +1392,6 @@ if type(result) == 'boolean' then
     if is_admin2(member_id) then
          return send_large_msg("channel#id"..channel_id, "You can't kick other admins")
     end
-		savelog(msg.to.id, name_log.." ["..msg.from.id.."] kicked: ["..user_id.."] by reply to sev. msg.")
 		kick_user(user_id, channel_id)
 	elseif get_cmd == "del" then
 		delete_msg(result.id, ok_cb, false)
