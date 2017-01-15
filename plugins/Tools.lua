@@ -37,13 +37,15 @@ do
     local message = '🔹 لیست گروه های ربات :\n\n '
     local i = 1
     for k,v in pairs(data[tostring(groups)]) do
+      
       local settings = data[tostring(v)]['settings']
       for m,n in pairsByKeys(settings) do
+        i = i + 1
         if m == 'set_name' then
           name = n
-          i = i + 1
         end
       end
+      
       message = message .. '️ '..i..' - '.. name .. ' [' .. v .. ']\n\n '
     end
     local file = io.open("./groups/lists/listed_groups.txt", "w")
