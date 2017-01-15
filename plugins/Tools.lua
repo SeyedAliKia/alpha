@@ -41,7 +41,7 @@ do
       for m,n in pairsByKeys(settings) do
         if m == 'set_name' then
           name = n
-          i = i +1
+          i = i + 1
         end
       end
 
