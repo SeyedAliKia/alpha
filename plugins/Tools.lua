@@ -35,7 +35,7 @@ do
       return
     end
     local message = '🔹 لیست گروه های ربات :\n\n '
-    local i = 1
+    local i = 0
     for k,v in pairs(data[tostring(groups)]) do
       
       local settings = data[tostring(v)]['settings']
