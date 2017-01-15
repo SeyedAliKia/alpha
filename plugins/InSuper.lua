@@ -2008,8 +2008,8 @@ local function run(msg, matches, result)
 			if not group_link then
 				return reply_msg(msg.id,'⚠️ لینک گروه را با دستور <b>Setlink </b>یا <i>تنظیم لینک </i>تنظیم کنید !',ok_cb,false)
 			end
-			        group_link = group_link:gsub("telegram.me","t.me")
-			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link
+			        local slink = http.request('http://api.yon.ir/?url='..URL.escape(group_link))
+			        local text = "♐️ لینک گروه <b>"..msg.to.title.." </b>:\n"..group_link.."\n🔸 لینک کوتاه :\n"..slink
                                 return reply_msg(msg.id, text, ok_cb, false)
 		end
 
