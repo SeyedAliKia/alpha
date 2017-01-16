@@ -2167,19 +2167,19 @@ local function run(msg, matches, result)
 			return "ok"
 		end
 
-		if matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and is_owner(msg) then
+		if matches[1]:lower() == 'demote' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'demote',
 					msg = msg
 				}
 				demote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'demote' and matches[2] and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'demote'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1]:lower() == 'demote' or matches[1] == 'تنزل' and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'demote' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
 					get_cmd = 'demote'
