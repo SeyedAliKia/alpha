@@ -186,7 +186,7 @@ else
    reply_msg(cb_extra.msg.id, text, ok_cb,false)	
 end
 
-local function muted_user_list(msg, chat_id)
+--[[local function muted_user_list(msg, chat_id)
 	local hash =  'mute_user:'..chat_id
 	local list = redis:smembers(hash)
 	local text = "🔇 کاربران بیصدا شده گروه <b>"..msg.to.title.." </b>:\n"
@@ -201,7 +201,7 @@ local function muted_user_list(msg, chat_id)
 		end
 	end
 	return text
-end
+end]]
 
 local function callback_clean_bots (extra, success, result)
 	local msg = extra.msg
