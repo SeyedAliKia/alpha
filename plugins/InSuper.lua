@@ -2132,19 +2132,18 @@ local function run(msg, matches, result)
 		end
 
 		if matches[1]:lower() == 'promote' or 'ترفیع' and is_owner(msg) then
-			
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'promote',
 					msg = msg
 				}
 				promote = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'promote' or matches[1] == 'ترفیع' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'promote' or 'ترفیع' and matches[2] and string.match(matches[2], '^%d+$') then
 				local receiver = get_receiver(msg)
 				local user_id = "user#id"..matches[2]
 				local get_cmd = 'promote'
 				user_info(user_id, cb_user_info, {receiver = receiver, get_cmd = get_cmd})
-			elseif matches[1]:lower() == 'promote' or matches[1] == 'ترفیع' and matches[2] and not string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'promote' or 'ترفیع' and matches[2] and not string.match(matches[2], '^%d+$') then
 				local cbres_extra = {
 					channel = get_receiver(msg),
 					get_cmd = 'promote',
