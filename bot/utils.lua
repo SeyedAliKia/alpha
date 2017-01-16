@@ -1098,10 +1098,10 @@ function mutes_list(chat_id)
 end
 
 -- Returns chat_user mute list
---[[function muted_user_list(chat_id)
+function muted_user_list(chat_id)
 	local hash =  'mute_user:'..chat_id
 	local list = redis:smembers(hash)
-	local text = "Muted Users for: [ID: "..chat_id.." ]:\n\n"
+	local text = "🔇 کاربران بیصدا شده گروه <b>"..msg.to.title.." </b>:\n"
 	for k,v in pairsByKeys(list) do
   		local user_info = redis:hgetall('user:'..v)
 		if user_info and user_info.print_name then
@@ -1113,7 +1113,7 @@ end
 		end
 	end
 	return text
-end]]
+end
 
 --End Chat Mutes
 
