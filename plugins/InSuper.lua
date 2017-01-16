@@ -2131,7 +2131,8 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'promote' and is_owner(msg) then
+		if matches[1]:lower() == 'promote' or 'ترفیع' and is_owner(msg) then
+			
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'promote',
