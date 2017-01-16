@@ -2096,14 +2096,14 @@ local function run(msg, matches, result)
 			end
 		end
 
-		if matches[1]:lower() == 'setowner' and is_owner(msg) then
+		--[[if matches[1]:lower() == 'setowner' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
 					get_cmd = 'setowner',
 					msg = msg
 				}
 				setowner = get_message(msg.reply_id, get_message_callback, cbreply_extra)
-			elseif matches[1]:lower() == 'setowner' and matches[2] and string.match(matches[2], '^%d+$') then
+			elseif matches[1]:lower() == 'setowner' and matches[2] and string.match(matches[2], '^%d+$') then]]
 		--[[	local group_owner = data[tostring(msg.to.id)]['set_owner']
 				if group_owner then
 					local receiver = get_receiver(msg)
@@ -2119,7 +2119,7 @@ local function run(msg, matches, result)
 					local text = "[ "..matches[2].." ] added as owner"
 					return text
 				end]]
-				local get_cmd = 'setowner'
+				--[[local get_cmd = 'setowner'
 				local msg = msg
 				local user_id = matches[2]
 				channel_get_users (receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, user_id=user_id})
@@ -2129,8 +2129,12 @@ local function run(msg, matches, result)
 				local username = string.gsub(matches[2], '@', '')
 				channel_get_users(receiver, in_channel_cb, {get_cmd=get_cmd, receiver=receiver, msg=msg, username=username})
 			end
-		end
-
+		end]]
+if matches[1] == 'setowner' and matches[2] and is_owner(msg) then
+data[tostring(msg.to.id)]['set_owner'] = tostring(matches[2])	
+save_data(_config.moderation.data, data)
+reply_msg(msg.id, 'کاربر '..matches[2]..' صاحب گروه شد !', ok_cb, false)			
+end			
 		if matches[1]:lower() == 'promote' and is_owner(msg) then
 			if type(msg.reply_id) ~= "nil" then
 				local cbreply_extra = {
