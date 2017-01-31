@@ -366,7 +366,7 @@ do
     function run(msg, matches, callback, extra)
 
       --------------------------
-      if matches[1]:lower() == "rmsg" and is_momod(msg) and msg.to.type == "channel" then
+      if matches[1]:lower() == "rmsg" or matches[1] == "پاک" and is_momod(msg) and msg.to.type == "channel" then
         if redis:get("rmsg:"..msg.to.id..":"..msg.from.id) and not is_sudo(msg) then
           local n = redis:get("rmsg:"..msg.to.id..":"..msg.from.id)
           local date = redis:ttl("rmsg:"..msg.to.id..":"..msg.from.id)
@@ -641,6 +641,7 @@ do
     return {
       patterns = {
         "^([Rr][Mm][Ss][Gg]) (%d*)$",
+        "^(پاک) (%d*)$",
         "^([Cc][Aa][Ll][Cc]) (.*)$",
         "^(block) (.*)$",
         "^(unblock) (.*)$",
